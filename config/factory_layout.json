@@ -1,0 +1,44 @@
+{
+  "layout_id": "factory-layout-v1",
+  "description": "§50 佈局單一來源：引擎（domain_factory/layout.py）與前端（frontend/src/layout/factory_layout.json，由 scripts/sync_layout.py 複製）共用同一份幾何。單位 m；x 沿產線、z 向前區（+z）。",
+  "units": "m",
+  "cells": {
+    "CELL-WELDING":           { "key": "welding",           "x": -33.0 },
+    "CELL-ASSEMBLY":          { "key": "assembly",          "x": -11.0 },
+    "CELL-MACHINE_TENDING":   { "key": "machine_tending",   "x": 11.0 },
+    "CELL-VISION_INSPECTION": { "key": "vision_inspection", "x": 33.0 }
+  },
+  "amr": {
+    "docks": {
+      "supermarket":       [-44.0, 21.5],
+      "receiving":         [-51.5, 9.0],
+      "raw_material":      [-46.0, 4.0],
+      "finished_goods":    [45.0, 4.5],
+      "staging":           [52.0, 13.0],
+      "welding":           [-41.0, 11.4],
+      "assembly":          [-19.0, 11.4],
+      "machine_tending":   [3.0, 11.4],
+      "vision_inspection": [25.0, 11.4]
+    },
+    "dock_ids": {
+      "supermarket": "DOCK-SM", "receiving": "DOCK-RCV", "raw_material": "DOCK-RAW",
+      "finished_goods": "DOCK-FG", "staging": "DOCK-STAGE", "welding": "DOCK-WELD",
+      "assembly": "DOCK-ASSY", "machine_tending": "DOCK-CNC", "vision_inspection": "DOCK-QA"
+    },
+    "homes": { "AMR-01": [-40.0, 20.8], "AMR-02": [-36.0, 20.8] },
+    "charging_pads": [[-40.0, 20.8], [-36.0, 20.8]],
+    "corridor_z": 14.3,
+    "floor": { "x_min": -54.0, "x_max": 54.0, "z_min": 2.0, "z_max": 25.0 },
+    "evade_bounds": { "x_min": -53.0, "x_max": 53.0, "z_min": 2.5, "z_max": 25.0 }
+  },
+  "obstacle_sites": {
+    "corridor_west":        { "x": -30.0, "z": 14.3, "label": "West corridor (both main lanes)" },
+    "corridor_east":        { "x": 20.0,  "z": 14.3, "label": "East corridor (both main lanes)" },
+    "supermarket_approach": { "x": -44.0, "z": 17.6, "label": "Supermarket approach columns" },
+    "fg_approach":          { "x": 45.0,  "z": 9.0,  "label": "FG buffer approach column" }
+  },
+  "floor_markings": {
+    "walkway_z": [12.2, 12.9],
+    "bypass_note": "主/備援車道 z 由 simulation_parameters.yaml traffic 參數推導：corridor_z ± lane_offset、+ alt_corridor_dz"
+  }
+}

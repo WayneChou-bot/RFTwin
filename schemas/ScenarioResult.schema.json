@@ -1,0 +1,412 @@
+{
+  "$defs": {
+    "BranchFrom": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "seq": {
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run_id",
+        "seq"
+      ],
+      "title": "BranchFrom",
+      "type": "object"
+    },
+    "ExplanationResult": {
+      "additionalProperties": false,
+      "description": "§22.2 — AI/規則式解釋的固定格式；不得缺少證據與不確定性標示。",
+      "properties": {
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "primary_cause": {
+          "title": "Primary Cause",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "recommended_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Recommended Actions",
+          "type": "array"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "expected_impact": {
+          "title": "Expected Impact",
+          "type": "string"
+        },
+        "risk": {
+          "title": "Risk",
+          "type": "string"
+        },
+        "requires_human_approval": {
+          "title": "Requires Human Approval",
+          "type": "boolean"
+        },
+        "is_simulation_result": {
+          "title": "Is Simulation Result",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "summary",
+        "primary_cause",
+        "evidence",
+        "recommended_actions",
+        "confidence",
+        "assumptions",
+        "expected_impact",
+        "risk",
+        "requires_human_approval",
+        "is_simulation_result"
+      ],
+      "title": "ExplanationResult",
+      "type": "object"
+    },
+    "FirstDivergence": {
+      "additionalProperties": false,
+      "description": "§50：兩條事件流（略過注入事件本身）第一個不同的事件。",
+      "properties": {
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "sim_tick": {
+          "minimum": 0,
+          "title": "Sim Tick",
+          "type": "integer"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "string"
+        },
+        "baseline_event": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline Event"
+        },
+        "scenario_event": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scenario Event"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "sim_tick",
+        "sim_time",
+        "message"
+      ],
+      "title": "FirstDivergence",
+      "type": "object"
+    },
+    "MetricRow": {
+      "additionalProperties": false,
+      "description": "§50：Baseline vs Scenario 對照一列（方向感知）。",
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "higher_is_better": {
+          "title": "Higher Is Better",
+          "type": "boolean"
+        },
+        "baseline": {
+          "title": "Baseline",
+          "type": "number"
+        },
+        "scenario": {
+          "title": "Scenario",
+          "type": "number"
+        },
+        "delta": {
+          "title": "Delta",
+          "type": "number"
+        },
+        "delta_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Pct"
+        },
+        "better": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Better"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "higher_is_better",
+        "baseline",
+        "scenario",
+        "delta"
+      ],
+      "title": "MetricRow",
+      "type": "object"
+    },
+    "RunProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "engine_version": {
+          "title": "Engine Version",
+          "type": "string"
+        },
+        "domain_version": {
+          "title": "Domain Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "parameter_set_id": {
+          "title": "Parameter Set Id",
+          "type": "string"
+        },
+        "parameter_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Parameter Hash",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "layout_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Id"
+        },
+        "layout_hash": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Hash"
+        },
+        "initial_snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initial Snapshot Id"
+        },
+        "branch_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BranchFrom"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "run_id",
+        "engine_version",
+        "domain_version",
+        "schema_version",
+        "parameter_set_id",
+        "parameter_hash",
+        "seed"
+      ],
+      "title": "RunProvenance",
+      "type": "object"
+    },
+    "ScenarioSide": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "kpis": {
+          "additionalProperties": true,
+          "title": "Kpis",
+          "type": "object"
+        },
+        "provenance": {
+          "$ref": "#/$defs/RunProvenance"
+        }
+      },
+      "required": [
+        "run_id",
+        "kpis",
+        "provenance"
+      ],
+      "title": "ScenarioSide",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "§23 What-if 比較結果（12 項 KPI delta）。",
+  "properties": {
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "injection": {
+      "additionalProperties": true,
+      "title": "Injection",
+      "type": "object"
+    },
+    "horizon_min": {
+      "title": "Horizon Min",
+      "type": "integer"
+    },
+    "branch_from": {
+      "$ref": "#/$defs/BranchFrom"
+    },
+    "baseline": {
+      "$ref": "#/$defs/ScenarioSide"
+    },
+    "scenario": {
+      "$ref": "#/$defs/ScenarioSide"
+    },
+    "deltas": {
+      "additionalProperties": true,
+      "title": "Deltas",
+      "type": "object"
+    },
+    "metrics": {
+      "items": {
+        "$ref": "#/$defs/MetricRow"
+      },
+      "title": "Metrics",
+      "type": "array"
+    },
+    "first_divergence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FirstDivergence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "evidence_raw": {
+      "additionalProperties": true,
+      "title": "Evidence Raw",
+      "type": "object"
+    },
+    "explanation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExplanationResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "scenario_id",
+    "injection",
+    "horizon_min",
+    "branch_from",
+    "baseline",
+    "scenario",
+    "deltas",
+    "evidence_raw"
+  ],
+  "title": "ScenarioResult",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "twin-platform",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Robot Factory Digital Twin — backend-authoritative, deterministic, explainable simulation of a robotic production line",
+  "type": "module",
+  "scripts": {
+    "schemas": "python scripts/export_schemas.py",
+    "types": "node scripts/generate_types.mjs",
+    "types:check": "node scripts/generate_types.mjs --check",
+    "fixture": "python scripts/dump_snapshot.py",
+    "fixture:validate": "node scripts/validate_fixture.mjs",
+    "test": "python -m pytest tests/ -q",
+    "ci": "npm run schemas && npm run fixture && npm run fixture:validate && npm run types:check && npm run test",
+    "demo:fixture": "python scripts/generate_demo.py",
+    "dev:all": "node scripts/dev_all.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "json-schema-to-typescript": "^16.0.0",
+    "concurrently": "^9.1.0"
+  }
+}

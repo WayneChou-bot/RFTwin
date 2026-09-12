@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "Severity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "TwinEvent": {
+      "additionalProperties": false,
+      "description": "§15.2",
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "seq": {
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        },
+        "sim_tick": {
+          "minimum": 0,
+          "title": "Sim Tick",
+          "type": "integer"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "string"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "event_type": {
+          "title": "Event Type",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "line_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Id"
+        },
+        "cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cell Id"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Threshold"
+        },
+        "acknowledged": {
+          "default": false,
+          "title": "Acknowledged",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event_id",
+        "run_id",
+        "seq",
+        "sim_tick",
+        "sim_time",
+        "source_type",
+        "source_id",
+        "event_type",
+        "severity",
+        "message"
+      ],
+      "title": "TwinEvent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "§14.2 — 只有 Event 遞增 seq。",
+  "properties": {
+    "type": {
+      "const": "event",
+      "title": "Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "seq": {
+      "minimum": 0,
+      "title": "Seq",
+      "type": "integer"
+    },
+    "sim_tick": {
+      "minimum": 0,
+      "title": "Sim Tick",
+      "type": "integer"
+    },
+    "sim_time": {
+      "title": "Sim Time",
+      "type": "string"
+    },
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "event": {
+      "$ref": "#/$defs/TwinEvent"
+    }
+  },
+  "required": [
+    "type",
+    "schema_version",
+    "run_id",
+    "seq",
+    "sim_tick",
+    "sim_time",
+    "generated_at",
+    "event"
+  ],
+  "title": "EventMessage",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

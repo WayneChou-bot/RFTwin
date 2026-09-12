@@ -1,0 +1,146 @@
+# Robot Factory Digital Twin — Simulation Parameters
+# 單一參數來源；規格附錄 C 與本檔同步。所有數值皆為模擬假設，非真實工廠標準值。
+# parameter_hash（正規化 JSON, sort_keys, SHA-256）: sha256:62474e3e9008b76e8dc34e8ac7fff0ab144111b66e93dac67a4cff35e49c3d0f
+
+parameter_set_id: factory-mvp-v13
+schema_version: "1.0"
+tick_ms: 100
+shift:
+  start: "06:00"
+  length_hours: 8
+  demo_start: "10:00"
+preroll_ticks: 144000
+seed_default: 42
+target_good_units_per_shift: 1100
+
+cells:
+  welding:
+    stations: [W-01, W-02, W-03, W-04]
+    robots:   [R-01, R-02, R-03, R-04]
+    station_cycle_sec: {motion: 40}
+  assembly:
+    stations: [A-01, A-02, A-03, A-04]
+    robots:   [R-05, R-06, R-07, R-08]
+    station_cycle_sec: {motion: 40}
+  machine_tending:
+    stations: [M-01, M-02]
+    robots:   [R-09, R-10]
+    machines: [CNC-01, CNC-02]
+    robot_to_machine: {R-09: CNC-01, R-10: CNC-02}
+    station_cycle_sec: {load: 10, machine_processing: 27, unload: 8}
+    robot_state_during_processing: WAITING_MACHINE
+  vision_inspection:
+    stations: [Q-01, Q-02]
+    robots:   [R-11, R-12]
+    cameras:  [CAM-01, CAM-02]
+    station_cycle_sec: {handling: 26, capture_infer: 12}
+    fail_probability: 0.0068
+
+buffers:
+  raw_material:            {capacity: 60, reorder_point: 20, replenishment_batch: 40}
+  welding_to_assembly:     {capacity: 8}
+  assembly_to_machining:   {capacity: 8}
+  machining_to_inspection: {capacity: 6}
+  rework_area:             {capacity: 10, full_behavior: BLOCK_INSPECTION, rework_time_sec: 120}
+  finished_goods:          {capacity: null}
+
+conveyors:
+  C-01: {from: welding,         to: assembly,          in_transit_max: 4, transit_sec: 20}
+  C-02: {from: assembly,        to: machine_tending,   in_transit_max: 4, transit_sec: 20}
+  C-03: {from: machine_tending, to: vision_inspection, in_transit_max: 4, transit_sec: 20}
+
+amr:
+  units: [AMR-01, AMR-02]
+  finished_collect_threshold: 24
+  finished_collect_batch: 20
+  task_queue_policy: PRIORITY_THEN_FIFO
+  drop_tasks_when_busy: false
+  unload_when_buffer_full: WAIT
+
+# §39 Intralogistics（v5 新增）：Supermarket → AMR → Cell-side Rack → 耗料 → 空箱回流
+intralogistics:
+  racks:                       # 每個 Cell 一座 cell-side rack（SKU 見引擎 RACK_SKU）
+    capacity: 60
+    reorder_point: 24          # qty ≤ reorder（含 reserved=0）→ REPLENISHMENT_REQUESTED
+    replenish_batch: 36        # 任務全程 ≈165s 消耗 ~7 → 名目最低水位 ≈17 > low
+    low_threshold: 10          # qty < low → MATERIAL_LOW（名目不觸發；物流延誤才觸發）
+  supermarket:                 # v7（§44.2）：per-SKU 庫存；外部供應卡車順帶收走空箱
+    capacity_per_sku: 150
+    external_supply_threshold: 40    # 任一 SKU 低於此值 → §45.3 收貨事件鏈（v8 起非瞬時）
+    external_supply_batch: 100
+  staging:                     # v7（§44.8）：shipped 於 Staging 卸貨才計入
+    pallet_size: 20            # 每板 20 件 → PALLET_READY
+    pallets_per_truck: 3       # 滿 3 板 → 出貨流程（§45.4）
+    outbound_assign_sec: 5     # v8（§45.4）：OUTBOUND_ASSIGNED → 門開
+    outbound_load_sec: 15      # v8（§45.4）：DOCKED 裝車 → SHIPPED
+  receiving:                   # v8（§45.3）：收貨事件閉環（外部供應不再瞬時入庫）
+    arrival_sec: 6             # DELIVERY_ARRIVED → DOOR_OPENING
+    door_sec: 4                # 捲門開啟
+    unload_sec: 8              # PALLET_RECEIVED（卸至黃色待驗區；卡車順帶收走空箱）
+    inspect_sec: 10            # RECEIVING_INSPECTION → MATERIAL_REGISTERED（綠色已驗區）
+  fleet:                       # 任務狀態機各相位時長（§39.4）
+    travel_to_pickup_sec: 40
+    docking_sec: 8
+    loading_sec: 12
+    travel_to_dropoff_sec: 45
+    unloading_sec: 12
+    return_sec: 40             # 名目值（電量分攤基準）；§47 起實際行走時長=路線長/速度
+    speed_m_per_s: 1.2         # 行走速度；§47 相位時長與 KPI 距離皆由此推導
+  traffic:                     # §47 交通管理（決定性讓行與改道）
+    lane_offset_m: 0.9         # 走廊專屬車道偏移（雙向對開不同線，錯車間距 1.8m）
+    column_offset_m: 0.7       # 縱向支線專屬偏移：進出 dock 垂直線永不共線
+    safe_distance_m: 2.0       # 前方他車 < 此距離 → 讓行（停等）
+    clear_distance_m: 2.6      # 遲滯：讓行解除門檻（避免走走停停抖動）
+    hard_stop_m: 1.2           # 貼身保險距離（移動鉗制下限；車寬 1.15m 不重疊）
+    backoff_m: 1.8             # 讓行中他車近於此距離 → 沿自身路線倒退讓出路口
+    reroute_after_sec: 6       # 讓行逾時且非終點排隊 → 改道備援走廊
+    right_of_way_hold_sec: 4   # 路權高者多等此秒數（頭對頭時由低路權者先繞）
+    alt_corridor_dz: 3.6       # 備援走廊：主走廊 z + 3.6 m（四條橫向車道間距 1.8m）
+    sense_m: 6.0               # §51 感知層感測範圍（只影響 wire 的 perception，不影響決策）
+  amr_energy_kw_moving: 0.9
+  amr_energy_kw_idle: 0.1
+
+# §41.5 Per-asset Power Profile（v6：每類設備獨立狀態功率；總能耗=各資產時間積分之和）
+energy:
+  base_load_kw: 12.0                 # Lighting / Auxiliary（AUX 資產）
+  demand_limit_kw: 150.0             # §41.2 Demand Limit（相位同步時瞬時峰值可近 170）
+  robot:    {idle: 0.4, active: 4.6, waiting: 0.9, fault: 0.2, standby: 0.15}
+  welding_controller: {standby: 0.8, positioning: 1.4, welding: 20.0}
+  cnc:      {idle: 1.6, door_open: 2.0, machining: 13.0, fault: 0.8, standby: 0.6}
+  conveyor: {stopped: 0.15, running: 1.2, jammed: 0.3}
+  vision:   {idle: 0.4, active: 1.9}
+  amr_charger_kw: 1.5
+  # v7（§44.10）：廠務能耗分類 — Energy Dashboard 不再只有生產設備
+  compressed_air: {base_kw: 2.0, per_active_welder_kw: 1.2}   # 壓縮機隨焊接活動
+  hvac_kw: 6.5                                                # 通風／空調（常載）
+  policies:                          # §41.7 Energy What-if 政策參數
+    robot_standby_after_idle_sec: 120
+
+amr_model:
+  battery_start_percent: [90, 82]
+  battery_drain_per_task_percent: 4.5   # v8：任務量增（INBOUND_RESTOCK）再調（5→4.5）
+  battery_charge_per_min_percent: 8     # v8：6→8；閒置即充（<60% 顯示 CHARGING）
+  low_battery_threshold_percent: 20
+  dispatch_min_battery_percent: 32      # v8：低於此不派工（先充電，保證回充窗口）
+
+minor_stop:
+  probability_per_cycle: 0.015
+  duration_sec_min: 20
+  duration_sec_max: 60
+
+failures:
+  conveyor_jam_default_sec: 120
+  tool_failure_repair_sec: 180
+  compressor_fault_sec: 90         # v9（§45.8）：壓縮機跳脫 → 焊接站失去壓縮空氣
+  light_curtain_clear_sec: 15      # v10（§46）：光柵遮斷物離開所需時間（之後仍需 Reset）
+  worker_zone_clear_sec: 20        # v10（§46）：人員離開受限區時間（之後仍需 Reset）
+  amr_obstacle_sec: 45             # v10（§46）：AMR 感測器停車（該車原地停等，自動續行）
+  zone_obstacle_sec: 90            # v12（§48）：空間障礙物存在時間（有座標，AMR 規劃繞開）
+  zone_obstacle_radius_m: 1.5      # v12（§48）：預設障礙物半徑（淨空 = 半徑 + hard_stop）
+
+dispatcher:
+  order: [READY, LONGEST_IDLE, HIGHEST_ROBOT_HEALTH, STATION_ID_ASC]
+
+integrity:
+  part_conservation: "created == wip + good_completed + scrap"
+  silent_part_deletion: forbidden

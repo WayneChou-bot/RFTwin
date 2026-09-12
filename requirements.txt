@@ -1,0 +1,17 @@
+# Runtime（backend）— 版本已鎖定（~= 允許 patch 更新；review P2-5 重現性）
+fastapi~=0.141.1
+uvicorn[standard]~=0.46.0
+wsproto~=1.2.0          # §50：--ws wsproto（避開 websockets keepalive 已知問題）
+pydantic~=2.13.3
+pyyaml~=6.0.3
+httpx~=0.28.1
+onnxruntime~=1.25.0      # Vision Inspection 推論（缺時自動退回 heuristic）
+
+# Dev / test
+pytest~=9.1.1
+
+# Vision 模型重新訓練時才需要（scripts/train_vision.py）
+scikit-learn~=1.8.0
+skl2onnx~=1.20.0
+numpy~=2.4.4
+pillow~=12.2.0

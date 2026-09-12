@@ -1,0 +1,44 @@
+{
+  "version": "insp-1.0",
+  "classes": [
+    "ok",
+    "scratch",
+    "missing_component",
+    "misalignment"
+  ],
+  "input": "gray32x32.flatten",
+  "train_per_class": 400,
+  "test_per_class": 100,
+  "held_out_accuracy": 0.995,
+  "false_reject_rate": 0.0,
+  "false_accept_rate": 0.0067,
+  "confusion_matrix": [
+    [
+      100,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      98,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      100,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      100
+    ]
+  ],
+  "train_seed": 1234,
+  "trained_in_sec": 2.7,
+  "note": "synthetic golden-sample images; simulation asset, not a real-world model"
+}

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: schemas · fixture · pytest · build · e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          npm ci
+          npm --prefix frontend ci
+
+      # ADR-003 單向管線：models → schemas → types；任何漂移即失敗
+      - name: Schemas, fixture, types (must be in sync)
+        env:
+          PYTHONPATH: packages
+        run: |
+          npm run schemas
+          npm run fixture
+          npm run fixture:validate
+          npm run types:check
+          python scripts/sync_layout.py --check
+
+      - name: pytest
+        env:
+          PYTHONPATH: packages
+          TWIN_PREROLL_BUDGET_S: "30"      # CI 機器較慢；tests/conftest.py 另設 TWIN_RATE_LIMIT=0
+        run: python -m pytest tests/ -q
+
+      - name: Frontend type-check & build   # build 腳本本身含 tsc --noEmit
+        run: npm --prefix frontend run build
+
+      - name: Playwright (offline / Local Demo)
+        working-directory: frontend
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test
+        env:
+          CI: "1"
+
+      - name: Playwright (live backend)
+        working-directory: frontend
+        env:
+          E2E_LIVE: "1"
+          TWIN_PORT: "8010"
+          TWIN_RATE_LIMIT: "0"
+          PYTHONPATH: ../packages
+        run: |
+          (cd .. && PYTHONPATH=packages TWIN_RATE_LIMIT=0 python -m uvicorn apps.factory_backend.main:app --port 8010 --ws wsproto &) 
+          for i in $(seq 1 60); do curl -sf http://localhost:8010/api/health >/dev/null && break; sleep 1; done
+          npx playwright test i18n reset_live sync
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report

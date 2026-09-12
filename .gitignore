@@ -1,0 +1,17 @@
+# dependencies / build
+node_modules/
+frontend/dist/
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+# test output
+frontend/test-results/
+frontend/playwright-report/
+# local
+*.log
+.env
+.env.*
+.DS_Store
+Thumbs.db

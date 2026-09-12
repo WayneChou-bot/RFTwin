@@ -1,0 +1,380 @@
+{
+  "$defs": {
+    "AmrPatchEntry": {
+      "additionalProperties": false,
+      "description": "§50：單台 AMR 的增量（只帶變動欄位）。",
+      "properties": {
+        "amr_id": {
+          "title": "Amr Id",
+          "type": "string"
+        },
+        "position": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position"
+        },
+        "route": {
+          "anyOf": [
+            {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Route"
+        },
+        "route_progress": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Route Progress"
+        },
+        "phase_progress": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase Progress"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AmrStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "task_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AmrTaskState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "traffic_state": {
+          "anyOf": [
+            {
+              "enum": [
+                "CLEAR",
+                "YIELDING",
+                "REROUTED",
+                "BLOCKED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Traffic State"
+        },
+        "carrying": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Carrying"
+        },
+        "battery_percent": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Battery Percent"
+        },
+        "perception": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AmrPerception"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "amr_id"
+      ],
+      "title": "AmrPatchEntry",
+      "type": "object"
+    },
+    "AmrPerception": {
+      "additionalProperties": false,
+      "description": "§51 感知層（WareTwin 借鏡）：純由引擎交通判斷的輸入推導，前端畫扇形／射線。",
+      "properties": {
+        "state": {
+          "enum": [
+            "CLEAR",
+            "CAUTION",
+            "STOPPED"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "heading": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Heading",
+          "type": "array"
+        },
+        "ahead_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ahead M"
+        },
+        "nearest_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nearest M"
+        },
+        "safe_m": {
+          "minimum": 0,
+          "title": "Safe M",
+          "type": "number"
+        },
+        "clear_m": {
+          "minimum": 0,
+          "title": "Clear M",
+          "type": "number"
+        },
+        "hard_stop_m": {
+          "minimum": 0,
+          "title": "Hard Stop M",
+          "type": "number"
+        },
+        "sense_m": {
+          "minimum": 0,
+          "title": "Sense M",
+          "type": "number"
+        },
+        "obstacles": {
+          "items": {
+            "$ref": "#/$defs/PerceivedObject"
+          },
+          "title": "Obstacles",
+          "type": "array"
+        }
+      },
+      "required": [
+        "state",
+        "heading",
+        "safe_m",
+        "clear_m",
+        "hard_stop_m",
+        "sense_m"
+      ],
+      "title": "AmrPerception",
+      "type": "object"
+    },
+    "AmrStatus": {
+      "enum": [
+        "IDLE",
+        "DELIVERING",
+        "RETURNING",
+        "CHARGING",
+        "WAITING",
+        "ERROR"
+      ],
+      "title": "AmrStatus",
+      "type": "string"
+    },
+    "AmrTaskState": {
+      "description": "§39.4 任務狀態機（顯示層據此推導路徑與動作）。",
+      "enum": [
+        "IDLE",
+        "TRAVEL_TO_PICKUP",
+        "DOCKING_PICKUP",
+        "LOADING",
+        "TRAVEL_TO_DROPOFF",
+        "DOCKING_DROPOFF",
+        "UNLOADING",
+        "RETURNING",
+        "WAITING_FOR_DOCK",
+        "CHARGING",
+        "BLOCKED",
+        "ERROR"
+      ],
+      "title": "AmrTaskState",
+      "type": "string"
+    },
+    "PerceivedObject": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "amr",
+            "obstacle"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "bearing_deg": {
+          "title": "Bearing Deg",
+          "type": "number"
+        },
+        "ref": {
+          "default": "center",
+          "enum": [
+            "center",
+            "edge"
+          ],
+          "title": "Ref",
+          "type": "string"
+        },
+        "radius_m": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Radius M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "distance_m",
+        "bearing_deg"
+      ],
+      "title": "PerceivedObject",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "§50（WareTwin 借鏡）：AMR 位置 10 Hz 增量串流；不遞增 seq（非事件）、\n不取代 1 Hz snapshot（snapshot 每秒整份覆蓋）。",
+  "properties": {
+    "type": {
+      "const": "amr_patch",
+      "title": "Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "sim_tick": {
+      "minimum": 0,
+      "title": "Sim Tick",
+      "type": "integer"
+    },
+    "sim_time": {
+      "title": "Sim Time",
+      "type": "string"
+    },
+    "generated_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generated At"
+    },
+    "amrs": {
+      "items": {
+        "$ref": "#/$defs/AmrPatchEntry"
+      },
+      "title": "Amrs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "type",
+    "schema_version",
+    "run_id",
+    "sim_tick",
+    "sim_time",
+    "amrs"
+  ],
+  "title": "AmrPatchMessage",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

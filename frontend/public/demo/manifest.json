@@ -1,0 +1,16 @@
+{
+ "demo_id": "factory-local-seed42",
+ "seed": 42,
+ "parameter_set_id": "factory-mvp-v13",
+ "parameter_hash": "sha256:62474e3e9008b76e8dc34e8ac7fff0ab144111b66e93dac67a4cff35e49c3d0f",
+ "schema_version": "1.0",
+ "engine_version": "0.20.0",
+ "duration_seconds": 300,
+ "tick_ms": 100,
+ "snapshot_hz": 1,
+ "event_count": 161,
+ "amr_patch_count": 2437,
+ "first_seq": 9067,
+ "last_seq": 9228,
+ "generated_by": "python-twin-engine (scripts/generate_demo.py)"
+}

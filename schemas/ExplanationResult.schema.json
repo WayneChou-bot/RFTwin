@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "description": "§22.2 — AI/規則式解釋的固定格式；不得缺少證據與不確定性標示。",
+  "properties": {
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "primary_cause": {
+      "title": "Primary Cause",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "recommended_actions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Recommended Actions",
+      "type": "array"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "expected_impact": {
+      "title": "Expected Impact",
+      "type": "string"
+    },
+    "risk": {
+      "title": "Risk",
+      "type": "string"
+    },
+    "requires_human_approval": {
+      "title": "Requires Human Approval",
+      "type": "boolean"
+    },
+    "is_simulation_result": {
+      "title": "Is Simulation Result",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "summary",
+    "primary_cause",
+    "evidence",
+    "recommended_actions",
+    "confidence",
+    "assumptions",
+    "expected_impact",
+    "risk",
+    "requires_human_approval",
+    "is_simulation_result"
+  ],
+  "title": "ExplanationResult",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

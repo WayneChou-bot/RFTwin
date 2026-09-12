@@ -1,0 +1,471 @@
+
+  /* 深色工業控制中心風格（規格 §6.2、§27）。單一深色定案外觀。 */
+  :root{
+    --page:#0d0d0d; --panel:#1a1a19; --panel-2:#212120; --line:#2c2c2a;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781; --baseline:#383835;
+    --blue:#3987e5; --aqua:#199e70; --amber:#c98500;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:1px;border-radius:4px}
+  body{background:var(--page);color:var(--ink);
+    font:14px/1.45 system-ui,-apple-system,"Segoe UI","Microsoft JhengHei",sans-serif}
+  html,body,#root{height:100%;overflow:hidden}
+  .app{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;height:100dvh;
+    overflow:hidden;gap:8px;padding:8px}
+  .scene-loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted)}
+  .center .c3d{flex:1;min-height:0;border-radius:8px;overflow:hidden;margin:0 8px 8px}
+  .simctl button{cursor:pointer}
+  .simctl button.on{color:var(--ink);border-color:var(--blue)}
+  .simctl button.busy{color:var(--ink);border-color:var(--blue);
+    animation:spin-reset 1s linear infinite;pointer-events:none}
+  @keyframes spin-reset{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+  .modes{display:flex;gap:2px}
+  .langsw button{min-width:30px;font-weight:600}       /* §56 介面語言切換（中／EN） */
+  .modes button{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer}
+  .modes button.on{color:var(--ink);border-color:var(--blue)}
+  .evfeed{max-height:70px;overflow:auto;font-size:10.5px;color:var(--muted);padding:0 12px 8px}
+
+  /* §37.3 三欄 clamp 版面 */
+  .mid{display:grid;gap:8px;min-height:0;
+    grid-template-columns:clamp(230px,17vw,290px) minmax(0,1fr) clamp(280px,21vw,360px)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:auto}
+
+  /* Header（§37.2 兩列：識別＋控制 / 分頁；Full ≤96px、Compact ≤76px） */
+  header{display:flex;flex-direction:column;gap:2px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:6px 14px;max-height:96px}
+  .hrow{display:flex;align-items:center;gap:10px;min-width:0}
+  .moremenu{display:none;position:relative}
+  .morebtn{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:2px 8px;font-size:13px;cursor:pointer}
+  .moremenu .menu{position:absolute;right:0;top:26px;z-index:60;background:var(--panel);
+    border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:210px;
+    box-shadow:0 6px 18px rgba(0,0,0,.5)}
+  .moremenu .mi{padding:3px 0;font-size:12px}
+  header .title{font-size:16px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+  .live{display:inline-flex;align-items:center;gap:6px;color:var(--critical);
+    border:1px solid var(--critical);border-radius:6px;padding:2px 8px;font-weight:700;
+    font-size:12px;white-space:nowrap}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+  /* §43.2 資料來源標示：LOCAL DEMO 不得與 LIVE 同色 → 藍色 */
+  .live.demo{color:var(--blue);border-color:var(--blue)}
+  .live.warn{color:var(--warning);border-color:var(--warning)}
+  .live.dim{color:var(--muted);border-color:var(--line)}
+  /* §43 連線橫幅 */
+  .connbar{display:flex;align-items:center;gap:12px;font-size:11.5px;
+    border:1px solid var(--line);border-radius:8px;padding:5px 14px;color:var(--ink-2)}
+  .connbar.off{display:none}
+  .connbar.demo{border-color:rgba(57,135,229,.5);background:rgba(57,135,229,.07);
+    color:var(--ink-2)}
+  .connbar.warn{border-color:rgba(250,178,25,.5);background:rgba(250,178,25,.07)}
+  .connbar.err{border-color:var(--critical);background:rgba(208,59,59,.1);color:#ffb3b3}
+  .connbar.prompt{border-color:var(--blue);background:rgba(57,135,229,.1)}
+  .tabs{display:flex;gap:2px;margin-left:8px}
+  .tab{padding:5px 10px;border-radius:6px;color:var(--muted);font-size:12.5px;cursor:pointer;
+    user-select:none;transition:color .12s;background:none;border:none;
+    font-family:inherit;line-height:inherit}
+  .tab:hover{color:var(--ink-2)}
+  .tab.on{background:var(--panel-2);color:var(--ink);font-weight:600}
+  .hspace{flex:1}
+  .hmeta{color:var(--ink-2);font-size:12.5px;display:flex;gap:14px;align-items:center}
+  .hmeta b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .simctl{display:flex;gap:4px}
+  .simctl button{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:3px 9px;font-size:12px}
+  .sync{display:inline-flex;align-items:center;gap:6px}
+  .sync .dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
+
+  /* Panels common */
+  h2{font-size:11.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;
+     margin:0;padding:11px 12px 7px}
+  .chip{font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 7px;letter-spacing:.03em}
+  .st-RUNNING{background:rgba(12,163,12,.16);color:var(--good)}
+  .st-WARNING{background:rgba(250,178,25,.14);color:var(--warning)}
+  /* §46.5 狀態顏色統一：BLOCKED 橙、STARVED 黃、IDLE/WAITING 藍 */
+  .st-ERROR,.st-FAULT,.st-EMERGENCY_STOP{background:rgba(208,59,59,.16);color:var(--critical)}
+  .st-BLOCKED{background:rgba(224,112,48,.16);color:#e07030}
+  .st-STARVED{background:rgba(250,178,25,.14);color:var(--warning)}
+  .st-DEGRADED,.st-MAINTENANCE{background:rgba(201,133,0,.16);color:var(--amber)}
+  .st-IDLE,.st-WAITING_MACHINE,.st-WAITING{background:rgba(57,135,229,.14);color:var(--blue)}
+  .st-CHARGING{background:rgba(137,135,129,.16);color:var(--ink-2)}
+  .st-DELIVERING{background:rgba(57,135,229,.16);color:var(--blue)}
+
+  /* Left: cells */
+  .cell{margin:0 8px 8px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:8px;padding:9px 10px;cursor:default}
+  .cell .row1{display:flex;align-items:center;gap:8px}
+  .cell .name{font-weight:650;font-size:13px;flex:1}
+  .cell .bneck{font-size:10px;color:var(--amber);border:1px solid var(--amber);
+    border-radius:4px;padding:0 5px;font-weight:700}
+  .cell .kv{display:flex;gap:12px;color:var(--muted);font-size:11.5px;margin-top:5px}
+  .cell .kv b{color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .bufrow{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:10.5px;color:var(--muted)}
+  .buf{flex:1;height:6px;background:var(--baseline);border-radius:3px;overflow:hidden}
+  .buf i{display:block;height:100%;background:var(--blue);border-radius:3px}
+  .buf.warn i{background:var(--serious)}
+
+  /* Robots grid */
+  .robots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 10px 10px}
+  .rb{border:1px solid var(--line);background:var(--panel-2);border-radius:7px;
+    padding:6px 4px;text-align:center;cursor:pointer;font-size:11.5px;
+    color:var(--ink);font-family:inherit;width:100%}
+  .rb .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:5px}
+  .rb.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+  .rsum{display:flex;gap:0;padding:2px 12px 8px}
+  .rsum div{flex:1;text-align:center}
+  .rsum .n{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+  .rsum .l{font-size:10px;color:var(--muted);letter-spacing:.06em}
+
+  /* Center schematic */
+  .center{display:flex;flex-direction:column}
+  .center .note{color:var(--muted);font-size:11.5px;padding:0 12px 6px}
+  .schem{flex:1;min-height:0;padding:0 8px 8px}
+  .schem svg{width:100%;height:100%}
+  .schem text{font:11px system-ui,"Microsoft JhengHei",sans-serif;fill:var(--ink-2)}
+  .schem .cellbox{fill:var(--panel-2);stroke:var(--line);rx:8}
+  .schem .cellbox.bn{stroke:var(--amber)}
+  .schem .st{fill:var(--baseline)}
+  .schem .st.busy{fill:var(--blue)}
+  .schem .conv{stroke:var(--baseline);stroke-width:8;fill:none}
+  .schem .part{fill:var(--blue)}
+  .schem .lbl{fill:var(--muted);font-size:10px;letter-spacing:.06em}
+
+  /* Right detail */
+  .det{padding:0 12px 12px;font-size:12.5px}
+  .det .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .det .head .id{font-size:16px;font-weight:700}
+  .det table{width:100%;border-collapse:collapse;margin:6px 0}
+  .det td{padding:2.5px 0;color:var(--muted)}
+  .det td+td{text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .jl{margin:2px 0}
+  .jl .lab{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
+  .jl .bar{height:6px;background:var(--baseline);border-radius:3px;overflow:hidden}
+  .jl .bar i{display:block;height:100%;border-radius:3px;background:var(--blue)}
+  .jl .bar i.hot{background:var(--serious)}
+  .sect{font-size:10.5px;color:var(--muted);letter-spacing:.08em;margin:10px 0 4px;text-transform:uppercase}
+
+  /* Bottom dashboard（§37.3 KPI Strip clamp(170px,22vh,220px)） */
+  .bottom{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;position:relative}
+  .bottom .tile{height:clamp(170px,22vh,220px)}
+  /* §37.3 高度不足：收合為單列摘要，展開時以 overlay 呈現，不撐長頁面 */
+  .kpibar{display:flex;align-items:center;gap:18px;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:12px;
+    color:var(--muted)}
+  .kpibar b{color:var(--ink);font-size:14px;margin-left:5px;font-variant-numeric:tabular-nums}
+  .kpibar i{font-style:normal;font-size:11px}
+  .kpiex{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer}
+  .kpiex:hover{color:var(--ink);border-color:var(--blue)}
+  .bottom.overlay{position:fixed;left:8px;right:8px;bottom:8px;z-index:70;
+    background:var(--page);padding:26px 0 0;border-radius:10px;
+    box-shadow:0 -8px 30px rgba(0,0,0,.55)}
+  .bottom.overlay .kpiex.close{position:absolute;top:0;right:6px}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;display:flex;flex-direction:column;min-width:0}
+  .tile h3{margin:0 0 2px;font-size:11px;letter-spacing:.09em;color:var(--muted);text-transform:uppercase}
+  .hero{font-size:26px;font-weight:700;line-height:1.15}
+  .sub{font-size:11px;color:var(--muted)}
+  .delta-good{color:var(--good);font-size:11.5px}
+  .spark{flex:1;min-height:0;position:relative}
+  .spark svg{width:100%;height:100%;overflow:visible}
+  .tt{position:absolute;pointer-events:none;background:var(--panel-2);border:1px solid var(--line);
+     border-radius:6px;padding:3px 8px;font-size:11px;color:var(--ink);display:none;white-space:nowrap;
+     transform:translate(-50%,-130%)}
+  .oee-wrap{display:flex;gap:12px;align-items:center;flex:1}
+  .apq{flex:1}
+  .apq .jl .bar i{background:var(--aqua)}
+  .alerts{overflow:auto;flex:1}
+  .al{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--line);padding:6px 0;font-size:11.5px}
+  .al:first-child{border-top:0}
+  .al .sev{flex:none;margin-top:1px}
+  .al .t{color:var(--ink)}
+  .al .d{color:var(--muted);font-size:10.5px}
+  .al .time{margin-left:auto;color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .sev i{font-style:normal;font-size:12px}
+  footer{grid-column:1/-1;display:none}
+  .prov{color:var(--muted);font-size:10.5px;padding:4px 12px 8px;font-variant-numeric:tabular-nums}
+  .placeholder{color:var(--muted);font-size:11.5px;border:1px dashed var(--line);
+    border-radius:8px;padding:8px;flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+
+  .rtabs{display:flex;gap:2px;padding:8px 10px 0}
+  .rtabs button{flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:4px 0;font-size:11.5px;cursor:pointer}
+  .rtabs button.on{color:var(--ink);border-color:var(--blue)}
+  .injgrid{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+  .injgrid button{text-align:left;background:var(--panel-2);border:1px solid var(--line);
+    color:var(--ink-2);border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer}
+  .injgrid button:hover{border-color:var(--serious)}
+  .injgrid button span{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+  .auditlist{max-height:520px;overflow:auto;font-size:10.5px}
+  .arow{display:flex;gap:6px;border-top:1px solid var(--line);padding:3.5px 0;flex-wrap:wrap}
+  .arow .time{color:var(--muted);font-variant-numeric:tabular-nums}
+  .arow .actor{color:var(--aqua)} .arow .actor.operator{color:var(--warning)}
+  .arow .src{color:var(--ink-2)} .arow .act{color:var(--ink)}
+  .arow .rsn{color:var(--muted);width:100%;padding-left:52px}
+  .ackbtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:5px;
+    padding:1px 7px;font-size:10px;cursor:pointer;align-self:center}
+  .ackbtn:hover{color:var(--ink);border-color:var(--blue)}
+
+  .expl{overflow:auto;flex:1;font-size:11px;line-height:1.4}
+  .expl .t{color:var(--ink)}
+  .expl .d{color:var(--muted);margin:3px 0}
+  .expl .act{color:var(--aqua);font-size:10.5px}
+  .det table td{vertical-align:top}
+  .det .wtable{font-size:11px}
+  .det .wtable th{color:var(--muted);text-align:left;font-weight:600;font-size:10px;padding:2px 4px;border-bottom:1px solid var(--line)}
+  .det .wtable td{padding:3px 4px;border-bottom:1px solid var(--line)}
+  .det .wtable td:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+  .injgrid button:disabled{opacity:.5;cursor:wait}
+
+  .copilot{display:flex;flex-direction:column;height:calc(100% - 40px)}
+  .chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}
+  .chips button{background:var(--panel-2);border:1px solid var(--line);color:var(--ink-2);
+    border-radius:10px;padding:3px 8px;font-size:10.5px;cursor:pointer;text-align:left}
+  .chips button:hover{border-color:var(--blue)}
+  .chatlog{flex:1;overflow:auto;min-height:120px}
+  .chatlog .q{color:var(--muted);font-size:11px;margin-top:8px}
+  .chatlog .a pre{white-space:pre-wrap;font:11.5px/1.5 system-ui,"Microsoft JhengHei",sans-serif;
+    background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;
+    margin:4px 0 2px;color:var(--ink)}
+  .chatlog .meta{color:var(--muted);font-size:10px}
+  .askrow{display:flex;gap:6px;margin-top:8px}
+  .askrow input{flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
+    border-radius:7px;padding:6px 9px;font-size:12px}
+  .askrow button{background:var(--blue);border:none;color:#fff;border-radius:7px;
+    padding:0 14px;cursor:pointer}
+  .cust .custrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:var(--muted)}
+  .cust select,.cust input{background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
+    border-radius:6px;padding:4px 6px;font-size:11.5px}
+  .cust input[type=number]{width:52px}
+  .cust button{background:var(--panel-2);border:1px solid var(--blue);color:var(--ink);
+    border-radius:6px;padding:4px 12px;cursor:pointer}
+
+  .camfeed{display:flex;flex-direction:column;gap:6px}
+  .camimg{position:relative;width:100%;aspect-ratio:1;border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;background:#000}
+  .camimg img{width:100%;height:100%;image-rendering:pixelated;display:block}
+  .camimg .bbox{position:absolute;border:2px solid var(--critical);border-radius:2px;
+    box-shadow:0 0 8px rgba(208,59,59,.6)}
+  .camimg .verdict{position:absolute;top:6px;right:6px;font-size:10.5px;font-weight:700;
+    padding:1px 7px;border-radius:5px}
+  .camimg .verdict.PASS{background:rgba(12,163,12,.25);color:var(--good)}
+  .camimg .verdict.FAIL{background:rgba(208,59,59,.3);color:#ff9c9c}
+  .caminfo{font-size:11px;color:var(--ink-2)}
+  .thumbs{display:flex;gap:4px;margin-top:5px}
+  .thumbs img{width:40px;height:40px;border-radius:5px;image-rendering:pixelated;opacity:.8}
+
+  /* ---- §37 響應式：Full ≥1440×900 / Compact 1280×720+ / Small 以下 ---- */
+  @media (max-width:1600px){
+    header .title{font-size:14px}
+    .tab{padding:4px 7px;font-size:11.5px}
+    .simctl button,.modes button{padding:3px 6px;font-size:10.5px}
+    .hmeta{font-size:11.5px}
+  }
+  /* Compact Dashboard（§37.1：寬 <1440 或高 <900） */
+  @media (max-width:1439px),(max-height:899px){
+    header{max-height:76px;padding:4px 10px;gap:1px}
+    header .title{font-size:12.5px}
+    .hopt{display:none}                 /* 環境資訊 / line 名 / 行內 Rendering Mode → More menu */
+    .moremenu{display:block}
+    .tab{padding:3px 6px;font-size:11px}
+    .simctl button{padding:2px 5px;font-size:10px}
+    .rsum .n{font-size:16px}
+    .bottom{gap:6px}
+  }
+  @media (max-width:1150px){
+    .bottom{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
+  /* 桌機低高度（Windows/瀏覽器縮放常見，如 150% → ~1280×629）：
+     維持 100dvh 固定版面，KPI 已有 36px 收合列、左右欄自行捲動 —— 不整頁捲動。 */
+  @media (max-height:719px){
+    h2{padding:7px 12px 4px}
+    .hrow{gap:8px}
+    .evfeed{max-height:44px}
+  }
+  /* Small Screen／Responsive Stack（§37.1 修訂：只有「寬度不足」才放棄固定 viewport） */
+  @media (max-width:1099px){
+    html,body,#root{overflow:auto}
+    .app{height:auto;overflow:visible;min-height:100dvh}
+    .mid{min-height:480px}
+  }
+
+  .c3dwrap{position:relative;width:100%;height:100%}
+  .campresets{position:absolute;top:8px;left:8px;display:flex;flex-wrap:wrap;gap:4px;max-width:70%}
+  .campresets button{background:rgba(26,26,25,.85);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:3px 8px;font-size:10.5px;cursor:pointer;backdrop-filter:blur(2px)}
+  .campresets button:hover{color:var(--ink);border-color:var(--blue)}
+  .fpsbadge{position:absolute;top:8px;right:8px;background:rgba(26,26,25,.85);
+    border:1px solid var(--line);color:var(--muted);font-size:11px;
+    padding:2px 8px;border-radius:4px;pointer-events:none}
+  .fpsbadge.low{color:var(--serious);border-color:var(--serious)}
+
+  /* ------- Center data views (§7.2–7.6) ------- */
+  .viewhost{flex:1;min-height:0;overflow:auto;margin:0 8px 8px;border-radius:8px;
+    background:var(--panel-2);border:1px solid var(--line)}
+  .viewpad{padding:10px 14px;height:100%;overflow:auto}
+  .viewpad .viewpad{padding:0;height:auto;overflow:visible}
+  .vtable{width:100%;border-collapse:collapse;font-size:12px}
+  .vtable th{color:var(--muted);text-align:left;font-weight:600;font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--line)}
+  .vtable td{padding:7px 8px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+  .vtable tbody tr:hover{background:var(--panel)}
+  .qstats{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);
+    padding:2px 0 10px}
+  .qstats b{color:var(--ink);font-size:13px;margin-left:4px}
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .qcard{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px}
+  .qimg{position:relative;width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;
+    background:var(--baseline)}
+  .qimg img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated}
+  .qimg .bbox{position:absolute;border:2px solid var(--critical);border-radius:2px;
+    box-shadow:0 0 6px rgba(239,83,80,.5)}
+  .qcard .sub{padding-top:5px;font-size:10.5px}
+
+  /* ------- §38 Factory Camera / CCTV ------- */
+  .campanel{margin:2px 0 4px}
+  .camhead{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-2);
+    padding:2px 0 5px;min-width:0}
+  .camhead b{font-size:11.5px;white-space:nowrap}
+  .camhead .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rec{display:inline-flex;align-items:center;gap:4px;color:var(--critical);
+    font-size:9.5px;font-weight:700;letter-spacing:.05em;white-space:nowrap}
+  .rec i{width:7px;height:7px;border-radius:50%;background:var(--critical);
+    animation:blink 1.6s infinite}
+  .rec.demo{color:var(--blue)} .rec.demo i{background:var(--blue);animation:none}
+  .rec.warn{color:var(--serious)} .rec.warn i{background:var(--serious);animation:none}
+  .rec.dim{color:var(--muted)} .rec.dim i{background:var(--muted);animation:none}
+  @keyframes blink{0%,60%{opacity:1}80%{opacity:.25}100%{opacity:1}}
+  .cctv{position:relative;width:100%;aspect-ratio:16/9;border-radius:7px;overflow:hidden;
+    background:#0c0c0b;border:1px solid var(--line)}
+  .camctl{display:flex;align-items:center;gap:5px;padding-top:5px}
+  .camctl button{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:2px 8px;font-size:10.5px;cursor:pointer}
+  .camctl button:hover{color:var(--ink);border-color:var(--blue)}
+  .camctl input{accent-color:var(--blue);vertical-align:-2px}
+  .camana{padding:5px 0 0;line-height:1.5;color:var(--ink-2)}
+  .camfull{position:fixed;inset:0;z-index:100;background:rgba(6,6,5,.82);
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+  .camfull .frame{width:min(78vw,1100px);background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px 14px}
+  .camfull .camhead{font-size:12.5px;padding-bottom:8px}
+  .camfull .camhead button{background:var(--panel-2);border:1px solid var(--line);
+    color:var(--muted);border-radius:6px;padding:3px 10px;cursor:pointer}
+  .cctv.big{aspect-ratio:16/9;max-height:70vh}
+
+  /* ------- §40 Production Flow（三層） ------- */
+  .flowwrap{display:flex;flex-direction:column;height:100%;padding:8px 12px;gap:6px;
+    overflow:auto}
+  .fkpis{display:flex;gap:6px;flex-wrap:wrap}
+  .fk{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    padding:5px 10px;min-width:86px}
+  .fk .l{display:block;font-size:9px;color:var(--muted);letter-spacing:.05em;
+    text-transform:uppercase}
+  .fk .v{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums}
+  .fcomp{display:flex;align-items:center;gap:8px;font-size:11px}
+  .fcomp select{background:var(--panel-2);color:var(--ink-2);border:1px solid var(--line);
+    border-radius:6px;padding:2px 6px;font-size:11px}
+  .fdelta{color:var(--muted)} .fdelta b{color:var(--ink)}
+  .fmapwrap{position:relative;flex:none}
+  .fwhy{position:absolute;right:10px;top:8px;max-width:400px;background:var(--panel);
+    border:1px solid var(--amber);border-radius:10px;padding:10px 14px;font-size:11.5px;
+    box-shadow:0 8px 24px rgba(0,0,0,.5);cursor:pointer;z-index:5}
+  .fwhy b{color:var(--amber)} .fwhy p{margin:6px 0;line-height:1.55;color:var(--ink-2)}
+  .fflow{animation:fmarch 1s linear infinite}
+  @keyframes fmarch{to{stroke-dashoffset:-16}}
+  .fana{border-top:1px solid var(--line);padding-top:6px}
+  .fsel{display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap}
+  .fsel button{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:6px;padding:2px 9px;font-size:10.5px;cursor:pointer}
+  .fsel button.on{color:var(--ink);border-color:var(--blue)}
+
+  /* ------- §41 Energy Dashboard ------- */
+  .egrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;
+    margin-top:6px}
+  @media (max-width:1439px){.egrid{grid-template-columns:1fr}}
+  .echart{margin-bottom:6px}
+  .ebreak{margin:8px 0}
+  .ebar{display:flex;height:16px;border-radius:5px;overflow:hidden;background:var(--baseline)}
+  .ebar i{display:block;height:100%}
+  .elegend{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:var(--muted);
+    margin-top:4px}
+  .elegend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+  .elegend b{color:var(--ink-2)}
+  .eopp{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--aqua);
+    border-radius:8px;padding:8px 12px;margin:6px 0;font-size:11.5px}
+  .eopp .t{color:var(--ink);font-weight:600}
+  .eopp .conf{float:right;font-size:9.5px;color:var(--muted);font-weight:400}
+  .eopp .ev{color:var(--ink-2);margin:4px 0;line-height:1.5}
+  .eopp .kv{font-size:10.5px;color:var(--muted)} .eopp .kv b{color:var(--good)}
+  .ewi{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:11.5px;
+    color:var(--ink-2)}
+  .ewi input{accent-color:var(--blue)}
+  /* §45.10/45.11 場景控制鈕狀態 + §45.8 3D tooltip */
+  .campresets button.on{color:var(--blue);border-color:var(--blue)}
+  .campresets button.off{opacity:.55;text-decoration:line-through}
+  .tip3d{background:rgba(20,20,19,.92);border:1px solid var(--line);color:var(--ink);
+    font-size:11px;line-height:1.35;padding:6px 8px;border-radius:6px;white-space:nowrap;
+    box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  .tip3d b{color:var(--blue);margin-right:4px}
+  /* §46 Part Trace 卡 */
+  .partcard{position:absolute;top:38px;right:8px;width:230px;background:rgba(22,22,21,.94);
+    border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:11.5px;z-index:30}
+  .resetveil{position:absolute;inset:0;background:rgba(20,20,19,.62);display:flex;
+    align-items:center;justify-content:center;z-index:40;backdrop-filter:blur(1.5px)}
+  .resetveil .rv{background:rgba(22,22,21,.95);border:1px solid var(--blue);border-radius:10px;
+    padding:14px 22px;color:var(--ink);font-size:15px;display:flex;flex-direction:column;gap:6px;align-items:center}
+  .resetveil .rv small{color:var(--muted);font-size:11px}
+  .resetveil .spin{display:inline-block;animation:spin-reset 1s linear infinite;margin-right:6px}
+  .partcard.amrcard{top:auto;bottom:34px;left:8px;right:auto;width:250px}
+  .partcard.amrcard .ph b{color:#5fd2e5}
+  .partcard .pkv.muted{color:var(--muted);font-size:10px;margin-top:4px}
+  .partcard .tr-yielding{color:#ec835a}.partcard .tr-rerouted{color:#ffb74d}.partcard .tr-clear{color:var(--good)}
+  .partcard .tr-blocked{color:#ff5a4a}
+  .partcard .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+  .partcard .ph b{color:var(--blue);font-size:12.5px}
+  .partcard .ph button{background:none;border:none;color:var(--muted);cursor:pointer}
+  .proute{display:flex;gap:4px;margin:4px 0 7px}
+  .pstep{flex:1;text-align:center;font-size:9.5px;padding:2px 0;border-radius:4px;
+    border:1px solid var(--line);color:var(--muted)}
+  .pstep.done{border-color:var(--good);color:var(--good)}
+  .pstep.current{border-color:var(--blue);color:var(--blue);font-weight:700}
+  .pkv{display:flex;justify-content:space-between;color:var(--muted);padding:1.5px 0;gap:6px}
+  .partcard .pkv:not(.muted){white-space:nowrap}      /* §56 中文標籤不拆字 */
+  .partcard .pkv:not(.muted) b{white-space:normal}
+  .pkv b{color:var(--ink-2)}
+
+/* §51 感知層／派工 Decision Record */
+.pc-clear { color: #5fd2e5; } .pc-caution { color: #ffb74d; } .pc-stopped { color: #ff5a4a; }
+.partcard .dnote { color: #b9c2c9; font-size: 10.5px; line-height: 1.35; padding: 1px 0 3px; border-bottom: 1px dashed #2f3634; margin-bottom: 3px; }
+.partcard .pkv b { text-align: right; margin-left: 8px; }
+.det .declist { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.det .drow { background: #202422; border: 1px solid #2f3634; border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.det .drow.deferred { border-color: #5a3a2a; }
+.det .drow .dhead { display: flex; gap: 8px; align-items: baseline; font-size: 12px; flex-wrap: wrap; }
+.det .drow .dhead .time { color: #8a9398; font-variant-numeric: tabular-nums; }
+.det .drow .dhead .ttype { color: #b9c2c9; }
+.det .drow .dhead .chosen { margin-left: auto; color: #5fd2e5; font-weight: 600; }
+.det .drow .dhead .chosen.none { color: #ff8a2a; }
+.det .drow .dhead .wait { color: #8a9398; font-size: 11px; }
+.det .drow .dreason { color: #d6dde2; font-size: 11.5px; margin-top: 3px; line-height: 1.35; }
+.det .dcands { margin-top: 6px; border-top: 1px solid #2f3634; padding-top: 4px; display: flex; flex-direction: column; gap: 4px; }
+.det .dcands .dc { font-size: 11px; color: #b9c2c9; line-height: 1.35; }
+.det .dcands .dc.win .dcl { color: #e9eef1; }
+.det .dcands .dc .dcr { color: #8a9398; padding-left: 10px; }
+.det .dcands .dc.win .dcr { color: #5fd2e5; }
+
+/* §52 窄螢幕提示（<1100 px） */
+.narrownotice{position:fixed;inset:auto 0 0 0;z-index:60;background:#1f2a33;border-top:1px solid #3a5468;
+  color:#e6edf2;padding:12px 16px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.45;
+  box-shadow:0 -6px 20px rgba(0,0,0,.4)}
+.narrownotice b{font-size:14px}
+.narrownotice span{color:#b9c6d0}
+.narrownotice button{align-self:flex-start;margin-top:4px;background:#3987e5;color:#fff;border:0;border-radius:6px;
+  padding:6px 12px;font-size:13px;cursor:pointer}
+
+/* §52 自訂障礙物表單 */
+.det .customob{grid-column:1 / -1;background:#202422;border:1px solid #2f3634;border-radius:6px;padding:6px 8px}
+.det .customob .row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.det .customob input{width:64px;background:#171a19;border:1px solid #2f3634;color:#e9eef1;border-radius:4px;padding:3px 6px;font-size:11.5px}
+.det .customob button{background:#2b3a44;border:1px solid #3a5468;color:#dfe8f0;border-radius:4px;padding:3px 8px;font-size:11.5px;cursor:pointer}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Robot Factory Digital Twin — robot arm on a dark tile (§55) -->
+  <rect width="64" height="64" rx="12" fill="#101820"/>
+  <rect x="10" y="48" width="44" height="6" rx="2" fill="#3987e5"/>
+  <rect x="22" y="40" width="20" height="8" rx="2" fill="#5fd2e5"/>
+  <path d="M32 40 L32 26 L46 16" stroke="#5fd2e5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="32" cy="26" r="4.5" fill="#101820" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="46" cy="16" r="4.5" fill="#101820" stroke="#ffb74d" stroke-width="2"/>
+  <path d="M46 16 L54 10 M46 16 L55 20" stroke="#ff5a4a" stroke-width="3" stroke-linecap="round"/>
+</svg>

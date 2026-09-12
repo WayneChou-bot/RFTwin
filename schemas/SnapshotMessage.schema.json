@@ -1,0 +1,2459 @@
+{
+  "$defs": {
+    "Alert": {
+      "additionalProperties": false,
+      "description": "§19",
+      "properties": {
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "string"
+        },
+        "event_seq": {
+          "minimum": 0,
+          "title": "Event Seq",
+          "type": "integer"
+        },
+        "acknowledged": {
+          "default": false,
+          "title": "Acknowledged",
+          "type": "boolean"
+        },
+        "resolved": {
+          "default": false,
+          "title": "Resolved",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "alert_id",
+        "severity",
+        "source_type",
+        "source_id",
+        "title",
+        "detail",
+        "sim_time",
+        "event_seq"
+      ],
+      "title": "Alert",
+      "type": "object"
+    },
+    "AmrKpiPerUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "amr_id": {
+          "title": "Amr Id",
+          "type": "string"
+        },
+        "tasks_completed": {
+          "minimum": 0,
+          "title": "Tasks Completed",
+          "type": "integer"
+        },
+        "busy_min": {
+          "minimum": 0,
+          "title": "Busy Min",
+          "type": "number"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "charging_min": {
+          "minimum": 0,
+          "title": "Charging Min",
+          "type": "number"
+        },
+        "battery": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Battery",
+          "type": "number"
+        }
+      },
+      "required": [
+        "amr_id",
+        "tasks_completed",
+        "busy_min",
+        "distance_m",
+        "charging_min",
+        "battery"
+      ],
+      "title": "AmrKpiPerUnit",
+      "type": "object"
+    },
+    "AmrKpis": {
+      "additionalProperties": false,
+      "description": "§39.6 物流 KPI。",
+      "properties": {
+        "utilization_pct": {
+          "minimum": 0,
+          "title": "Utilization Pct",
+          "type": "number"
+        },
+        "tasks_completed": {
+          "minimum": 0,
+          "title": "Tasks Completed",
+          "type": "integer"
+        },
+        "avg_task_wait_sec": {
+          "minimum": 0,
+          "title": "Avg Task Wait Sec",
+          "type": "number"
+        },
+        "on_time_replenishment_pct": {
+          "minimum": 0,
+          "title": "On Time Replenishment Pct",
+          "type": "number"
+        },
+        "stockout_min": {
+          "minimum": 0,
+          "title": "Stockout Min",
+          "type": "number"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "energy_kwh": {
+          "minimum": 0,
+          "title": "Energy Kwh",
+          "type": "number"
+        },
+        "charging_min": {
+          "minimum": 0,
+          "title": "Charging Min",
+          "type": "number"
+        },
+        "dock_wait_min": {
+          "minimum": 0,
+          "title": "Dock Wait Min",
+          "type": "number"
+        },
+        "starvation_from_logistics_min": {
+          "minimum": 0,
+          "title": "Starvation From Logistics Min",
+          "type": "number"
+        },
+        "pending_tasks": {
+          "minimum": 0,
+          "title": "Pending Tasks",
+          "type": "integer"
+        },
+        "per_amr": {
+          "items": {
+            "$ref": "#/$defs/AmrKpiPerUnit"
+          },
+          "title": "Per Amr",
+          "type": "array"
+        }
+      },
+      "required": [
+        "utilization_pct",
+        "tasks_completed",
+        "avg_task_wait_sec",
+        "on_time_replenishment_pct",
+        "stockout_min",
+        "distance_m",
+        "energy_kwh",
+        "charging_min",
+        "dock_wait_min",
+        "starvation_from_logistics_min",
+        "pending_tasks",
+        "per_amr"
+      ],
+      "title": "AmrKpis",
+      "type": "object"
+    },
+    "AmrPerception": {
+      "additionalProperties": false,
+      "description": "§51 感知層（WareTwin 借鏡）：純由引擎交通判斷的輸入推導，前端畫扇形／射線。",
+      "properties": {
+        "state": {
+          "enum": [
+            "CLEAR",
+            "CAUTION",
+            "STOPPED"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "heading": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Heading",
+          "type": "array"
+        },
+        "ahead_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ahead M"
+        },
+        "nearest_m": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nearest M"
+        },
+        "safe_m": {
+          "minimum": 0,
+          "title": "Safe M",
+          "type": "number"
+        },
+        "clear_m": {
+          "minimum": 0,
+          "title": "Clear M",
+          "type": "number"
+        },
+        "hard_stop_m": {
+          "minimum": 0,
+          "title": "Hard Stop M",
+          "type": "number"
+        },
+        "sense_m": {
+          "minimum": 0,
+          "title": "Sense M",
+          "type": "number"
+        },
+        "obstacles": {
+          "items": {
+            "$ref": "#/$defs/PerceivedObject"
+          },
+          "title": "Obstacles",
+          "type": "array"
+        }
+      },
+      "required": [
+        "state",
+        "heading",
+        "safe_m",
+        "clear_m",
+        "hard_stop_m",
+        "sense_m"
+      ],
+      "title": "AmrPerception",
+      "type": "object"
+    },
+    "AmrSnapshot": {
+      "additionalProperties": false,
+      "description": "§12＋§39：粗粒度 status 沿用，細粒度 task_state 驅動 3D 行走。",
+      "properties": {
+        "amr_id": {
+          "title": "Amr Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/AmrStatus"
+        },
+        "task_state": {
+          "$ref": "#/$defs/AmrTaskState"
+        },
+        "battery_percent": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Battery Percent",
+          "type": "number"
+        },
+        "current_task": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Task"
+        },
+        "task_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Type"
+        },
+        "task_target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Target"
+        },
+        "carrying": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Carrying"
+        },
+        "phase_progress": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Phase Progress",
+          "type": "number"
+        },
+        "phase_total_sec": {
+          "minimum": 0,
+          "title": "Phase Total Sec",
+          "type": "number"
+        },
+        "queue_length": {
+          "minimum": 0,
+          "title": "Queue Length",
+          "type": "integer"
+        },
+        "position": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Position",
+          "type": "array"
+        },
+        "route": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Route",
+          "type": "array"
+        },
+        "route_progress": {
+          "default": 0.0,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Route Progress",
+          "type": "number"
+        },
+        "traffic_state": {
+          "default": "CLEAR",
+          "enum": [
+            "CLEAR",
+            "YIELDING",
+            "REROUTED",
+            "BLOCKED"
+          ],
+          "title": "Traffic State",
+          "type": "string"
+        },
+        "perception": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AmrPerception"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "amr_id",
+        "status",
+        "task_state",
+        "battery_percent",
+        "phase_progress",
+        "phase_total_sec",
+        "queue_length",
+        "position"
+      ],
+      "title": "AmrSnapshot",
+      "type": "object"
+    },
+    "AmrStatus": {
+      "enum": [
+        "IDLE",
+        "DELIVERING",
+        "RETURNING",
+        "CHARGING",
+        "WAITING",
+        "ERROR"
+      ],
+      "title": "AmrStatus",
+      "type": "string"
+    },
+    "AmrTaskState": {
+      "description": "§39.4 任務狀態機（顯示層據此推導路徑與動作）。",
+      "enum": [
+        "IDLE",
+        "TRAVEL_TO_PICKUP",
+        "DOCKING_PICKUP",
+        "LOADING",
+        "TRAVEL_TO_DROPOFF",
+        "DOCKING_DROPOFF",
+        "UNLOADING",
+        "RETURNING",
+        "WAITING_FOR_DOCK",
+        "CHARGING",
+        "BLOCKED",
+        "ERROR"
+      ],
+      "title": "AmrTaskState",
+      "type": "string"
+    },
+    "BranchFrom": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "seq": {
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run_id",
+        "seq"
+      ],
+      "title": "BranchFrom",
+      "type": "object"
+    },
+    "BufferSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "buffer_id": {
+          "title": "Buffer Id",
+          "type": "string"
+        },
+        "capacity": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capacity"
+        },
+        "occupancy": {
+          "minimum": 0,
+          "title": "Occupancy",
+          "type": "integer"
+        },
+        "reorder_point": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reorder Point"
+        }
+      },
+      "required": [
+        "buffer_id",
+        "occupancy"
+      ],
+      "title": "BufferSnapshot",
+      "type": "object"
+    },
+    "CellSnapshot": {
+      "additionalProperties": false,
+      "description": "§10.2, §27 Process Cells 面板。",
+      "properties": {
+        "cell_id": {
+          "title": "Cell Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/CellState"
+        },
+        "operation": {
+          "$ref": "#/$defs/Operation"
+        },
+        "oee": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Oee",
+          "type": "number"
+        },
+        "throughput_uph": {
+          "minimum": 0,
+          "title": "Throughput Uph",
+          "type": "number"
+        },
+        "input_buffer": {
+          "$ref": "#/$defs/BufferSnapshot"
+        },
+        "output_buffer": {
+          "$ref": "#/$defs/BufferSnapshot"
+        },
+        "stations": {
+          "items": {
+            "$ref": "#/$defs/StationSnapshot"
+          },
+          "title": "Stations",
+          "type": "array"
+        },
+        "active_stations": {
+          "minimum": 0,
+          "title": "Active Stations",
+          "type": "integer"
+        },
+        "idle_stations": {
+          "minimum": 0,
+          "title": "Idle Stations",
+          "type": "integer"
+        },
+        "error_stations": {
+          "minimum": 0,
+          "title": "Error Stations",
+          "type": "integer"
+        },
+        "avg_station_cycle_sec": {
+          "minimum": 0,
+          "title": "Avg Station Cycle Sec",
+          "type": "number"
+        },
+        "is_bottleneck": {
+          "title": "Is Bottleneck",
+          "type": "boolean"
+        },
+        "safety_awaiting_reset": {
+          "default": false,
+          "title": "Safety Awaiting Reset",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "cell_id",
+        "name",
+        "state",
+        "operation",
+        "oee",
+        "throughput_uph",
+        "input_buffer",
+        "output_buffer",
+        "stations",
+        "active_stations",
+        "idle_stations",
+        "error_stations",
+        "avg_station_cycle_sec",
+        "is_bottleneck"
+      ],
+      "title": "CellSnapshot",
+      "type": "object"
+    },
+    "CellState": {
+      "enum": [
+        "RUNNING",
+        "STARVED",
+        "BLOCKED",
+        "DEGRADED",
+        "FAULT",
+        "MAINTENANCE"
+      ],
+      "title": "CellState",
+      "type": "string"
+    },
+    "ControlState": {
+      "additionalProperties": false,
+      "description": "§51 模擬控制狀態（後端權威；多分頁一致）。§52：seq 單調遞增，前端拒收倒退的控制狀態。",
+      "properties": {
+        "paused": {
+          "title": "Paused",
+          "type": "boolean"
+        },
+        "speed": {
+          "exclusiveMinimum": 0,
+          "title": "Speed",
+          "type": "number"
+        },
+        "seq": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "paused",
+        "speed"
+      ],
+      "title": "ControlState",
+      "type": "object"
+    },
+    "ConveyorSnapshot": {
+      "additionalProperties": false,
+      "description": "§11",
+      "properties": {
+        "conveyor_id": {
+          "title": "Conveyor Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ConveyorStatus"
+        },
+        "from_cell": {
+          "title": "From Cell",
+          "type": "string"
+        },
+        "to_cell": {
+          "title": "To Cell",
+          "type": "string"
+        },
+        "speed_mps": {
+          "minimum": 0,
+          "title": "Speed Mps",
+          "type": "number"
+        },
+        "item_count": {
+          "minimum": 0,
+          "title": "Item Count",
+          "type": "integer"
+        },
+        "in_transit_max": {
+          "minimum": 0,
+          "title": "In Transit Max",
+          "type": "integer"
+        },
+        "motor_current_a": {
+          "minimum": 0,
+          "title": "Motor Current A",
+          "type": "number"
+        },
+        "temperature_c": {
+          "title": "Temperature C",
+          "type": "number"
+        },
+        "energy_kw": {
+          "minimum": 0,
+          "title": "Energy Kw",
+          "type": "number"
+        }
+      },
+      "required": [
+        "conveyor_id",
+        "status",
+        "from_cell",
+        "to_cell",
+        "speed_mps",
+        "item_count",
+        "in_transit_max",
+        "motor_current_a",
+        "temperature_c",
+        "energy_kw"
+      ],
+      "title": "ConveyorSnapshot",
+      "type": "object"
+    },
+    "ConveyorStatus": {
+      "enum": [
+        "RUNNING",
+        "IDLE",
+        "BLOCKED",
+        "JAMMED",
+        "WARNING",
+        "ERROR",
+        "MAINTENANCE",
+        "OFFLINE"
+      ],
+      "title": "ConveyorStatus",
+      "type": "string"
+    },
+    "DispatchCandidate": {
+      "additionalProperties": false,
+      "description": "§51 派工候選評估（每台 AMR 一列；落選者附原因）。",
+      "properties": {
+        "amr_id": {
+          "title": "Amr Id",
+          "type": "string"
+        },
+        "eligible": {
+          "title": "Eligible",
+          "type": "boolean"
+        },
+        "state": {
+          "title": "State",
+          "type": "string"
+        },
+        "battery_percent": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Battery Percent",
+          "type": "number"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "pref_match": {
+          "title": "Pref Match",
+          "type": "boolean"
+        },
+        "rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rank"
+        },
+        "rejected_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rejected Reason"
+        }
+      },
+      "required": [
+        "amr_id",
+        "eligible",
+        "state",
+        "battery_percent",
+        "distance_m",
+        "pref_match"
+      ],
+      "title": "DispatchCandidate",
+      "type": "object"
+    },
+    "DispatchDecision": {
+      "additionalProperties": false,
+      "description": "§51 派工 Decision Record：規則、選中理由句、候選清單（WareTwin 借鏡）。",
+      "properties": {
+        "decision_id": {
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "task_type": {
+          "title": "Task Type",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "integer"
+        },
+        "sim_tick": {
+          "minimum": 0,
+          "title": "Sim Tick",
+          "type": "integer"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "string"
+        },
+        "queue_wait_sec": {
+          "minimum": 0,
+          "title": "Queue Wait Sec",
+          "type": "number"
+        },
+        "chosen": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Chosen"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/DispatchCandidate"
+          },
+          "title": "Candidates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decision_id",
+        "task_id",
+        "task_type",
+        "target",
+        "priority",
+        "sim_tick",
+        "sim_time",
+        "queue_wait_sec",
+        "rule",
+        "reason",
+        "candidates"
+      ],
+      "title": "DispatchDecision",
+      "type": "object"
+    },
+    "FacilitySnapshot": {
+      "additionalProperties": false,
+      "description": "§45.8：compressor／hvac／fume_extraction／mdp／charger 狀態（由引擎推導）。",
+      "properties": {
+        "compressor": {
+          "$ref": "#/$defs/FacilityUnit"
+        },
+        "hvac": {
+          "$ref": "#/$defs/FacilityUnit"
+        },
+        "fume_extraction": {
+          "$ref": "#/$defs/FacilityUnit"
+        },
+        "mdp": {
+          "$ref": "#/$defs/FacilityUnit"
+        },
+        "charger": {
+          "$ref": "#/$defs/FacilityUnit"
+        }
+      },
+      "required": [
+        "compressor",
+        "hvac",
+        "fume_extraction",
+        "mdp",
+        "charger"
+      ],
+      "title": "FacilitySnapshot",
+      "type": "object"
+    },
+    "FacilityUnit": {
+      "additionalProperties": true,
+      "description": "§45.8 廠務設備（欄位依設備不同；允許擴充）。",
+      "properties": {
+        "asset_id": {
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "state": {
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset_id",
+        "state"
+      ],
+      "title": "FacilityUnit",
+      "type": "object"
+    },
+    "FactoryEnvironment": {
+      "additionalProperties": false,
+      "properties": {
+        "temperature_c": {
+          "title": "Temperature C",
+          "type": "number"
+        },
+        "humidity_percent": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Humidity Percent",
+          "type": "number"
+        },
+        "system_status": {
+          "enum": [
+            "NORMAL",
+            "DEGRADED",
+            "ALARM"
+          ],
+          "title": "System Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "temperature_c",
+        "humidity_percent",
+        "system_status"
+      ],
+      "title": "FactoryEnvironment",
+      "type": "object"
+    },
+    "FactoryState": {
+      "additionalProperties": false,
+      "description": "Snapshot payload（`state` 欄位內容）。",
+      "properties": {
+        "factory_id": {
+          "title": "Factory Id",
+          "type": "string"
+        },
+        "environment": {
+          "$ref": "#/$defs/FactoryEnvironment"
+        },
+        "line": {
+          "$ref": "#/$defs/LineSnapshot"
+        },
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/CellSnapshot"
+          },
+          "title": "Cells",
+          "type": "array"
+        },
+        "conveyors": {
+          "items": {
+            "$ref": "#/$defs/ConveyorSnapshot"
+          },
+          "title": "Conveyors",
+          "type": "array"
+        },
+        "amrs": {
+          "items": {
+            "$ref": "#/$defs/AmrSnapshot"
+          },
+          "title": "Amrs",
+          "type": "array"
+        },
+        "robots": {
+          "items": {
+            "$ref": "#/$defs/RobotState"
+          },
+          "title": "Robots",
+          "type": "array"
+        },
+        "raw_buffer": {
+          "$ref": "#/$defs/BufferSnapshot"
+        },
+        "rework_buffer": {
+          "$ref": "#/$defs/BufferSnapshot"
+        },
+        "finished_buffer": {
+          "$ref": "#/$defs/BufferSnapshot"
+        },
+        "parts": {
+          "$ref": "#/$defs/PartCounts"
+        },
+        "racks": {
+          "items": {
+            "$ref": "#/$defs/RackSnapshot"
+          },
+          "title": "Racks",
+          "type": "array"
+        },
+        "supermarket": {
+          "$ref": "#/$defs/SupermarketSnapshot"
+        },
+        "staging": {
+          "$ref": "#/$defs/StagingSnapshot"
+        },
+        "receiving": {
+          "$ref": "#/$defs/ReceivingSnapshot"
+        },
+        "facility": {
+          "$ref": "#/$defs/FacilitySnapshot"
+        },
+        "obstacles": {
+          "items": {
+            "$ref": "#/$defs/ObstacleSnapshot"
+          },
+          "title": "Obstacles",
+          "type": "array"
+        },
+        "dispatch_decisions": {
+          "items": {
+            "$ref": "#/$defs/DispatchDecision"
+          },
+          "title": "Dispatch Decisions",
+          "type": "array"
+        },
+        "amr_kpis": {
+          "$ref": "#/$defs/AmrKpis"
+        },
+        "orders": {
+          "items": {
+            "$ref": "#/$defs/ProductionOrder"
+          },
+          "title": "Orders",
+          "type": "array"
+        },
+        "kpis": {
+          "$ref": "#/$defs/KpiSnapshot"
+        },
+        "history_minutes": {
+          "items": {
+            "$ref": "#/$defs/MinutePoint"
+          },
+          "title": "History Minutes",
+          "type": "array"
+        },
+        "recent_events": {
+          "items": {
+            "$ref": "#/$defs/TwinEvent"
+          },
+          "title": "Recent Events",
+          "type": "array"
+        },
+        "alerts": {
+          "items": {
+            "$ref": "#/$defs/Alert"
+          },
+          "title": "Alerts",
+          "type": "array"
+        },
+        "simulated_history": {
+          "title": "Simulated History",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "factory_id",
+        "environment",
+        "line",
+        "cells",
+        "conveyors",
+        "amrs",
+        "robots",
+        "raw_buffer",
+        "rework_buffer",
+        "finished_buffer",
+        "parts",
+        "racks",
+        "supermarket",
+        "staging",
+        "receiving",
+        "facility",
+        "amr_kpis",
+        "orders",
+        "kpis",
+        "history_minutes",
+        "recent_events",
+        "alerts",
+        "simulated_history"
+      ],
+      "title": "FactoryState",
+      "type": "object"
+    },
+    "KpiSnapshot": {
+      "additionalProperties": false,
+      "description": "§18 — 全部由同一組原始事件推導。",
+      "properties": {
+        "total_output": {
+          "minimum": 0,
+          "title": "Total Output",
+          "type": "integer"
+        },
+        "good_units": {
+          "minimum": 0,
+          "title": "Good Units",
+          "type": "integer"
+        },
+        "defect_units": {
+          "minimum": 0,
+          "title": "Defect Units",
+          "type": "integer"
+        },
+        "rework_units": {
+          "minimum": 0,
+          "title": "Rework Units",
+          "type": "integer"
+        },
+        "wip": {
+          "minimum": 0,
+          "title": "Wip",
+          "type": "integer"
+        },
+        "throughput_uph": {
+          "minimum": 0,
+          "title": "Throughput Uph",
+          "type": "number"
+        },
+        "takt_time_sec": {
+          "minimum": 0,
+          "title": "Takt Time Sec",
+          "type": "number"
+        },
+        "target_good_units": {
+          "minimum": 0,
+          "title": "Target Good Units",
+          "type": "integer"
+        },
+        "first_pass_yield": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "First Pass Yield",
+          "type": "number"
+        },
+        "defect_rate": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Defect Rate",
+          "type": "number"
+        },
+        "oee": {
+          "$ref": "#/$defs/OeeBlock"
+        },
+        "runtime_sec": {
+          "minimum": 0,
+          "title": "Runtime Sec",
+          "type": "number"
+        },
+        "downtime_sec": {
+          "minimum": 0,
+          "title": "Downtime Sec",
+          "type": "number"
+        },
+        "planned_time_sec": {
+          "minimum": 0,
+          "title": "Planned Time Sec",
+          "type": "number"
+        },
+        "avg_lead_time_sec": {
+          "minimum": 0,
+          "title": "Avg Lead Time Sec",
+          "type": "number"
+        },
+        "energy_kwh_total": {
+          "minimum": 0,
+          "title": "Energy Kwh Total",
+          "type": "number"
+        },
+        "idle_waste_kwh": {
+          "minimum": 0,
+          "title": "Idle Waste Kwh",
+          "type": "number"
+        },
+        "baseline_kw": {
+          "minimum": 0,
+          "title": "Baseline Kw",
+          "type": "number"
+        },
+        "baseline_delta_pct": {
+          "title": "Baseline Delta Pct",
+          "type": "number"
+        },
+        "demand_limit_kw": {
+          "minimum": 0,
+          "title": "Demand Limit Kw",
+          "type": "number"
+        },
+        "units_per_kwh": {
+          "minimum": 0,
+          "title": "Units Per Kwh",
+          "type": "number"
+        },
+        "energy_kwh_per_unit": {
+          "minimum": 0,
+          "title": "Energy Kwh Per Unit",
+          "type": "number"
+        },
+        "energy_kw_current": {
+          "minimum": 0,
+          "title": "Energy Kw Current",
+          "type": "number"
+        },
+        "peak_demand_kw": {
+          "minimum": 0,
+          "title": "Peak Demand Kw",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total_output",
+        "good_units",
+        "defect_units",
+        "rework_units",
+        "wip",
+        "throughput_uph",
+        "takt_time_sec",
+        "target_good_units",
+        "first_pass_yield",
+        "defect_rate",
+        "oee",
+        "runtime_sec",
+        "downtime_sec",
+        "planned_time_sec",
+        "avg_lead_time_sec",
+        "energy_kwh_total",
+        "idle_waste_kwh",
+        "baseline_kw",
+        "baseline_delta_pct",
+        "demand_limit_kw",
+        "units_per_kwh",
+        "energy_kwh_per_unit",
+        "energy_kw_current",
+        "peak_demand_kw"
+      ],
+      "title": "KpiSnapshot",
+      "type": "object"
+    },
+    "LineSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/LineState"
+        },
+        "bottleneck_cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bottleneck Cell Id"
+        }
+      },
+      "required": [
+        "line_id",
+        "name",
+        "state"
+      ],
+      "title": "LineSnapshot",
+      "type": "object"
+    },
+    "LineState": {
+      "enum": [
+        "RUNNING",
+        "IDLE",
+        "CHANGEOVER",
+        "BLOCKED",
+        "STARVED",
+        "DEGRADED",
+        "STOPPED",
+        "MAINTENANCE"
+      ],
+      "title": "LineState",
+      "type": "string"
+    },
+    "MinutePoint": {
+      "additionalProperties": false,
+      "description": "引擎 per-minute aggregator 輸出（§10.7）；Live 與 Pre-roll 共用。",
+      "properties": {
+        "sim_minute": {
+          "title": "Sim Minute",
+          "type": "string"
+        },
+        "good_units": {
+          "minimum": 0,
+          "title": "Good Units",
+          "type": "integer"
+        },
+        "defect_units": {
+          "minimum": 0,
+          "title": "Defect Units",
+          "type": "integer"
+        },
+        "throughput_uph": {
+          "minimum": 0,
+          "title": "Throughput Uph",
+          "type": "number"
+        },
+        "oee": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Oee",
+          "type": "number"
+        },
+        "defect_rate": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Defect Rate",
+          "type": "number"
+        },
+        "energy_kw": {
+          "minimum": 0,
+          "title": "Energy Kw",
+          "type": "number"
+        },
+        "wip": {
+          "minimum": 0,
+          "title": "Wip",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sim_minute",
+        "good_units",
+        "defect_units",
+        "throughput_uph",
+        "oee",
+        "defect_rate",
+        "energy_kw",
+        "wip"
+      ],
+      "title": "MinutePoint",
+      "type": "object"
+    },
+    "ObstacleSnapshot": {
+      "additionalProperties": false,
+      "description": "§48 空間障礙物：有座標／半徑／剩餘時間；AMR 路線規劃繞開、移動鉗制。",
+      "properties": {
+        "obstacle_id": {
+          "title": "Obstacle Id",
+          "type": "string"
+        },
+        "position": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Position",
+          "type": "array"
+        },
+        "radius_m": {
+          "minimum": 0,
+          "title": "Radius M",
+          "type": "number"
+        },
+        "clearance_m": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Clearance M",
+          "type": "number"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "remaining_sec": {
+          "minimum": 0,
+          "title": "Remaining Sec",
+          "type": "number"
+        }
+      },
+      "required": [
+        "obstacle_id",
+        "position",
+        "radius_m",
+        "label",
+        "remaining_sec"
+      ],
+      "title": "ObstacleSnapshot",
+      "type": "object"
+    },
+    "OeeBlock": {
+      "additionalProperties": false,
+      "description": "§18.2 OEE = A × P × Q（引擎計算，前端只顯示）。",
+      "properties": {
+        "availability": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Availability",
+          "type": "number"
+        },
+        "performance": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Performance",
+          "type": "number"
+        },
+        "quality": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Quality",
+          "type": "number"
+        },
+        "oee": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Oee",
+          "type": "number"
+        },
+        "target_oee": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Target Oee",
+          "type": "number"
+        }
+      },
+      "required": [
+        "availability",
+        "performance",
+        "quality",
+        "oee",
+        "target_oee"
+      ],
+      "title": "OeeBlock",
+      "type": "object"
+    },
+    "Operation": {
+      "enum": [
+        "WELDING",
+        "ASSEMBLY",
+        "MACHINING",
+        "INSPECTION",
+        "REWORK"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "OrderStatus": {
+      "enum": [
+        "PLANNED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "DELAYED",
+        "CANCELLED"
+      ],
+      "title": "OrderStatus",
+      "type": "string"
+    },
+    "PartCounts": {
+      "additionalProperties": false,
+      "description": "§13.3 守恆式的權威計數：created = wip + good_completed + scrap。",
+      "properties": {
+        "created": {
+          "minimum": 0,
+          "title": "Created",
+          "type": "integer"
+        },
+        "wip": {
+          "minimum": 0,
+          "title": "Wip",
+          "type": "integer"
+        },
+        "good_completed": {
+          "minimum": 0,
+          "title": "Good Completed",
+          "type": "integer"
+        },
+        "scrap": {
+          "minimum": 0,
+          "title": "Scrap",
+          "type": "integer"
+        },
+        "held": {
+          "minimum": 0,
+          "title": "Held",
+          "type": "integer"
+        },
+        "rework_wip": {
+          "minimum": 0,
+          "title": "Rework Wip",
+          "type": "integer"
+        },
+        "shipped": {
+          "minimum": 0,
+          "title": "Shipped",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "created",
+        "wip",
+        "good_completed",
+        "scrap",
+        "held",
+        "rework_wip",
+        "shipped"
+      ],
+      "title": "PartCounts",
+      "type": "object"
+    },
+    "PerceivedObject": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "amr",
+            "obstacle"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "bearing_deg": {
+          "title": "Bearing Deg",
+          "type": "number"
+        },
+        "ref": {
+          "default": "center",
+          "enum": [
+            "center",
+            "edge"
+          ],
+          "title": "Ref",
+          "type": "string"
+        },
+        "radius_m": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Radius M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "distance_m",
+        "bearing_deg"
+      ],
+      "title": "PerceivedObject",
+      "type": "object"
+    },
+    "ProductionOrder": {
+      "additionalProperties": false,
+      "description": "§10.3",
+      "properties": {
+        "order_id": {
+          "title": "Order Id",
+          "type": "string"
+        },
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "product_id": {
+          "title": "Product Id",
+          "type": "string"
+        },
+        "target_quantity": {
+          "minimum": 0,
+          "title": "Target Quantity",
+          "type": "integer"
+        },
+        "completed_quantity": {
+          "minimum": 0,
+          "title": "Completed Quantity",
+          "type": "integer"
+        },
+        "defect_quantity": {
+          "minimum": 0,
+          "title": "Defect Quantity",
+          "type": "integer"
+        },
+        "priority": {
+          "enum": [
+            "LOW",
+            "NORMAL",
+            "HIGH"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/OrderStatus"
+        },
+        "planned_start": {
+          "title": "Planned Start",
+          "type": "string"
+        },
+        "planned_end": {
+          "title": "Planned End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "order_id",
+        "line_id",
+        "product_id",
+        "target_quantity",
+        "completed_quantity",
+        "defect_quantity",
+        "priority",
+        "status",
+        "planned_start",
+        "planned_end"
+      ],
+      "title": "ProductionOrder",
+      "type": "object"
+    },
+    "RackSnapshot": {
+      "additionalProperties": false,
+      "description": "§39.1 Cell-side Rack（Slot 欄位；權威=引擎）。",
+      "properties": {
+        "rack_id": {
+          "title": "Rack Id",
+          "type": "string"
+        },
+        "cell_id": {
+          "title": "Cell Id",
+          "type": "string"
+        },
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        },
+        "capacity": {
+          "minimum": 0,
+          "title": "Capacity",
+          "type": "integer"
+        },
+        "qty": {
+          "minimum": 0,
+          "title": "Qty",
+          "type": "integer"
+        },
+        "reorder_point": {
+          "minimum": 0,
+          "title": "Reorder Point",
+          "type": "integer"
+        },
+        "reserved": {
+          "minimum": 0,
+          "title": "Reserved",
+          "type": "integer"
+        },
+        "container_id": {
+          "title": "Container Id",
+          "type": "string"
+        },
+        "last_replenished_time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Replenished Time"
+        },
+        "material_low": {
+          "title": "Material Low",
+          "type": "boolean"
+        },
+        "stockout_sec": {
+          "minimum": 0,
+          "title": "Stockout Sec",
+          "type": "number"
+        }
+      },
+      "required": [
+        "rack_id",
+        "cell_id",
+        "sku",
+        "capacity",
+        "qty",
+        "reorder_point",
+        "reserved",
+        "container_id",
+        "material_low",
+        "stockout_sec"
+      ],
+      "title": "RackSnapshot",
+      "type": "object"
+    },
+    "ReceivingSnapshot": {
+      "additionalProperties": false,
+      "description": "§45.3 收貨事件鏈：ARRIVED→DOOR_OPENING→UNLOADING→INSPECTING→WAIT_PICKUP。",
+      "properties": {
+        "stage": {
+          "enum": [
+            "IDLE",
+            "ARRIVED",
+            "DOOR_OPENING",
+            "UNLOADING",
+            "INSPECTING",
+            "WAIT_PICKUP"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sku"
+        },
+        "qty": {
+          "minimum": 0,
+          "title": "Qty",
+          "type": "integer"
+        },
+        "door_open": {
+          "title": "Door Open",
+          "type": "boolean"
+        },
+        "truck_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Truck Id"
+        }
+      },
+      "required": [
+        "stage",
+        "qty",
+        "door_open"
+      ],
+      "title": "ReceivingSnapshot",
+      "type": "object"
+    },
+    "RobotState": {
+      "additionalProperties": false,
+      "description": "§8.2",
+      "properties": {
+        "robot_id": {
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "cell_id": {
+          "title": "Cell Id",
+          "type": "string"
+        },
+        "station_id": {
+          "title": "Station Id",
+          "type": "string"
+        },
+        "process": {
+          "title": "Process",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/RobotStatus"
+        },
+        "mode": {
+          "enum": [
+            "AUTO",
+            "MANUAL",
+            "TEACH"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "cycle_state": {
+          "title": "Cycle State",
+          "type": "string"
+        },
+        "cycle_progress": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cycle Progress",
+          "type": "number"
+        },
+        "cycle_time_sec": {
+          "minimum": 0,
+          "title": "Cycle Time Sec",
+          "type": "number"
+        },
+        "target_cycle_time_sec": {
+          "minimum": 0,
+          "title": "Target Cycle Time Sec",
+          "type": "number"
+        },
+        "joint_load_percent": {
+          "items": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          },
+          "maxItems": 6,
+          "minItems": 6,
+          "title": "Joint Load Percent",
+          "type": "array"
+        },
+        "joint_temperature_c": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 6,
+          "minItems": 6,
+          "title": "Joint Temperature C",
+          "type": "array"
+        },
+        "tool_health_percent": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Tool Health Percent",
+          "type": "number"
+        },
+        "energy_kw": {
+          "minimum": 0,
+          "title": "Energy Kw",
+          "type": "number"
+        },
+        "alarm_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alarm Code"
+        },
+        "maintenance_risk": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Maintenance Risk",
+          "type": "number"
+        }
+      },
+      "required": [
+        "robot_id",
+        "line_id",
+        "cell_id",
+        "station_id",
+        "process",
+        "status",
+        "mode",
+        "cycle_state",
+        "cycle_progress",
+        "cycle_time_sec",
+        "target_cycle_time_sec",
+        "joint_load_percent",
+        "joint_temperature_c",
+        "tool_health_percent",
+        "energy_kw",
+        "maintenance_risk"
+      ],
+      "title": "RobotState",
+      "type": "object"
+    },
+    "RobotStatus": {
+      "enum": [
+        "RUNNING",
+        "IDLE",
+        "SETUP",
+        "STARVED",
+        "BLOCKED",
+        "WARNING",
+        "ERROR",
+        "MAINTENANCE",
+        "OFFLINE",
+        "EMERGENCY_STOP",
+        "WAITING_MACHINE"
+      ],
+      "title": "RobotStatus",
+      "type": "string"
+    },
+    "RunProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "engine_version": {
+          "title": "Engine Version",
+          "type": "string"
+        },
+        "domain_version": {
+          "title": "Domain Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "parameter_set_id": {
+          "title": "Parameter Set Id",
+          "type": "string"
+        },
+        "parameter_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Parameter Hash",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "layout_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Id"
+        },
+        "layout_hash": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Hash"
+        },
+        "initial_snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initial Snapshot Id"
+        },
+        "branch_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BranchFrom"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "run_id",
+        "engine_version",
+        "domain_version",
+        "schema_version",
+        "parameter_set_id",
+        "parameter_hash",
+        "seed"
+      ],
+      "title": "RunProvenance",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "SkuStock": {
+      "additionalProperties": false,
+      "properties": {
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        },
+        "qty": {
+          "minimum": 0,
+          "title": "Qty",
+          "type": "integer"
+        },
+        "capacity": {
+          "minimum": 0,
+          "title": "Capacity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sku",
+        "qty",
+        "capacity"
+      ],
+      "title": "SkuStock",
+      "type": "object"
+    },
+    "StagingSnapshot": {
+      "additionalProperties": false,
+      "description": "§44.8 Finished Goods Staging：shipped 於此卸貨才計入；滿 3 板出貨。\n§45.4：出貨改事件鏈（ASSIGNED→DOCKED→SHIPPED），門動畫由 door_open 驅動。",
+      "properties": {
+        "units": {
+          "minimum": 0,
+          "title": "Units",
+          "type": "integer"
+        },
+        "pallet_size": {
+          "minimum": 0,
+          "title": "Pallet Size",
+          "type": "integer"
+        },
+        "pallets_per_truck": {
+          "minimum": 0,
+          "title": "Pallets Per Truck",
+          "type": "integer"
+        },
+        "outbound_total": {
+          "minimum": 0,
+          "title": "Outbound Total",
+          "type": "integer"
+        },
+        "outbound_stage": {
+          "enum": [
+            "IDLE",
+            "ASSIGNED",
+            "DOCKED"
+          ],
+          "title": "Outbound Stage",
+          "type": "string"
+        },
+        "door_open": {
+          "title": "Door Open",
+          "type": "boolean"
+        },
+        "outbound_progress": {
+          "default": 0.0,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Outbound Progress",
+          "type": "number"
+        },
+        "shipment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shipment Id"
+        }
+      },
+      "required": [
+        "units",
+        "pallet_size",
+        "pallets_per_truck",
+        "outbound_total",
+        "outbound_stage",
+        "door_open"
+      ],
+      "title": "StagingSnapshot",
+      "type": "object"
+    },
+    "StationSnapshot": {
+      "additionalProperties": false,
+      "description": "§10.4",
+      "properties": {
+        "station_id": {
+          "title": "Station Id",
+          "type": "string"
+        },
+        "cell_id": {
+          "title": "Cell Id",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/StationState"
+        },
+        "robot_id": {
+          "title": "Robot Id",
+          "type": "string"
+        },
+        "machine_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Machine Id"
+        },
+        "current_part_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Part Id"
+        },
+        "cycle_progress": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Cycle Progress",
+          "type": "number"
+        },
+        "station_cycle_sec": {
+          "minimum": 0,
+          "title": "Station Cycle Sec",
+          "type": "number"
+        },
+        "target_station_cycle_sec": {
+          "minimum": 0,
+          "title": "Target Station Cycle Sec",
+          "type": "number"
+        },
+        "blocked_time_sec": {
+          "minimum": 0,
+          "title": "Blocked Time Sec",
+          "type": "number"
+        },
+        "starved_time_sec": {
+          "minimum": 0,
+          "title": "Starved Time Sec",
+          "type": "number"
+        },
+        "idle_time_sec": {
+          "minimum": 0,
+          "title": "Idle Time Sec",
+          "type": "number"
+        },
+        "fault_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fault Kind"
+        },
+        "fault_progress": {
+          "default": 0.0,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Fault Progress",
+          "type": "number"
+        }
+      },
+      "required": [
+        "station_id",
+        "cell_id",
+        "state",
+        "robot_id",
+        "cycle_progress",
+        "station_cycle_sec",
+        "target_station_cycle_sec",
+        "blocked_time_sec",
+        "starved_time_sec",
+        "idle_time_sec"
+      ],
+      "title": "StationSnapshot",
+      "type": "object"
+    },
+    "StationState": {
+      "enum": [
+        "READY",
+        "PROCESSING",
+        "BLOCKED",
+        "STARVED",
+        "FAULT",
+        "MAINTENANCE"
+      ],
+      "title": "StationState",
+      "type": "string"
+    },
+    "SupermarketSnapshot": {
+      "additionalProperties": false,
+      "description": "§44.2 Component Supermarket（v7：per-SKU 庫存 + 空箱架）。",
+      "properties": {
+        "per_sku": {
+          "items": {
+            "$ref": "#/$defs/SkuStock"
+          },
+          "title": "Per Sku",
+          "type": "array"
+        },
+        "empties": {
+          "minimum": 0,
+          "title": "Empties",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "per_sku",
+        "empties"
+      ],
+      "title": "SupermarketSnapshot",
+      "type": "object"
+    },
+    "TwinEvent": {
+      "additionalProperties": false,
+      "description": "§15.2",
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "seq": {
+          "minimum": 0,
+          "title": "Seq",
+          "type": "integer"
+        },
+        "sim_tick": {
+          "minimum": 0,
+          "title": "Sim Tick",
+          "type": "integer"
+        },
+        "sim_time": {
+          "title": "Sim Time",
+          "type": "string"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "event_type": {
+          "title": "Event Type",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "line_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Id"
+        },
+        "cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cell Id"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Threshold"
+        },
+        "acknowledged": {
+          "default": false,
+          "title": "Acknowledged",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event_id",
+        "run_id",
+        "seq",
+        "sim_tick",
+        "sim_time",
+        "source_type",
+        "source_id",
+        "event_type",
+        "severity",
+        "message"
+      ],
+      "title": "TwinEvent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "§14.2 — seq 為此快照已包含到哪一筆 Event；Snapshot 本身不占序號。",
+  "properties": {
+    "type": {
+      "const": "snapshot",
+      "title": "Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "seq": {
+      "minimum": 0,
+      "title": "Seq",
+      "type": "integer"
+    },
+    "sim_tick": {
+      "minimum": 0,
+      "title": "Sim Tick",
+      "type": "integer"
+    },
+    "sim_time": {
+      "title": "Sim Time",
+      "type": "string"
+    },
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/RunProvenance"
+    },
+    "state": {
+      "$ref": "#/$defs/FactoryState"
+    },
+    "control": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ControlState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "type",
+    "schema_version",
+    "run_id",
+    "seq",
+    "sim_tick",
+    "sim_time",
+    "generated_at",
+    "provenance",
+    "state"
+  ],
+  "title": "SnapshotMessage",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
