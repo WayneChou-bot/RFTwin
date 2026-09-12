@@ -4,6 +4,7 @@ import { FactoryScene } from "./scene/FactoryScene";
 import { ConnBanner, Dashboard, Header, LeftPanel, Provenance, RightPanel } from "./panels/Panels";
 import { EnergyView, FlowView, HealthView, QualityView, SimulationView } from "./panels/Views";
 import { useT, type TKey } from "./i18n";
+import { ViewErrorBoundary } from "./panels/ErrorBoundary";
 
 /* §52：<1100 px 的手機／窄視窗——整頁改為可捲動後介面仍過度壓縮；
  * 比照 WareTwin 給明確提示（可關閉），而不是讓訪客看到擠成一團的儀表板。 */
@@ -43,17 +44,19 @@ export default function App() {
         <LeftPanel />
         <section className="panel center">
           <h2>{T(`view.${view}` as TKey)}{mode === "CONNECTING" ? T("app.connecting") : ""}</h2>
-          {view === "3d" ? (
-            <div className="c3d"><FactoryScene /></div>
-          ) : (
-            <div className="viewhost">
-              {view === "flow" && <FlowView />}
-              {view === "health" && <HealthView />}
-              {view === "quality" && <QualityView />}
-              {view === "energy" && <EnergyView />}
-              {view === "simulation" && <SimulationView />}
-            </div>
-          )}
+          <ViewErrorBoundary resetKey={view}>
+            {view === "3d" ? (
+              <div className="c3d"><FactoryScene /></div>
+            ) : (
+              <div className="viewhost">
+                {view === "flow" && <FlowView />}
+                {view === "health" && <HealthView />}
+                {view === "quality" && <QualityView />}
+                {view === "energy" && <EnergyView />}
+                {view === "simulation" && <SimulationView />}
+              </div>
+            )}
+          </ViewErrorBoundary>
           <Provenance />
         </section>
         <RightPanel />

@@ -105,11 +105,16 @@ function FpsMeter({ el }: { el: React.RefObject<HTMLDivElement | null> }) {
   return null;
 }
 
+let consumedFly = 0;   // 最後一次已執行的 flyRequest（模組層級，跨 FactoryScene 重新掛載保留）
+
 function CameraRig({ preset, onArrive, followPos }:
   { preset: string | null; onArrive: () => void; followPos: [number, number] | null }) {
   const controls = useThree((s) => s.controls) as unknown as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
   useFrame((_, dt) => {
+    // 測試掛勾：畫面上的相機位置（e2e 驗「從其他視圖點機器人→切回 3D 並飛到該機器人」）
+    const w = window as unknown as { __camera?: [number, number, number] };
+    w.__camera = [camera.position.x, camera.position.y, camera.position.z];
     if (!preset || !controls) return;
     const k = Math.min(1, dt * 3.2);
     if ((preset === "Follow" || preset === "FlyTo") && followPos) {
@@ -800,10 +805,10 @@ export function FactoryScene() {
     return () => clearTimeout(id);
   }, [tour]);
   const flyRequest = useTwin((s) => s.flyRequest);
-  const firstFly = useRef(true);
   useEffect(() => {
-    if (firstFly.current) { firstFly.current = false; return; }   // 初始載入不飛
-    if (flyRequest) setPreset("FlyTo");
+    // 以「已消化的請求」判斷而不是「首次 effect」：從 Robot Health 等視圖點機器人時 selectRobot 會切回 3D，
+    // FactoryScene 是重新掛載的——舊寫法把這次請求當成初始載入吞掉，鏡頭就不飛。
+    if (flyRequest && flyRequest !== consumedFly) { consumedFly = flyRequest; setPreset("FlyTo"); }
   }, [flyRequest]);
   const flyTarget = useTwin((s) => s.flyTarget);
   const followPos = useMemo<[number, number] | null>(() => {

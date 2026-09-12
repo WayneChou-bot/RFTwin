@@ -34,17 +34,19 @@ PYTHONPATH=packages python -m pytest tests/ -q     # 約 4–5 分鐘（tests/co
 | test_guard | 12 | rate limit、Origin（名單／預設同源／Sec-Fetch-Site／X-Forwarded-Host）、body 上限、XFF 取段、WebSocket（accept 前 Origin、連線上限、訊息大小、慢連線逾時→關閉並釋放名額、並行 fan-out、首份 snapshot 逾時不卡廣播、名單結尾斜線容錯） |
 | test_dispatch_perception | 6 | Decision Record 涵蓋、rank 1 指派、決定性、感知幾何、wire |
 
-## Playwright e2e（13 項）
+## Playwright e2e（16 項）
 
 ```bash
 cd frontend && npm ci && npx playwright install chromium
-npm run build && npm run test:e2e                       # 10 項離線（Local Demo），3 項跳過；CI 1 worker／本機 2（無頭 WebGL 互搶）
+npm run build && npm run test:e2e                       # 13 項離線（Local Demo），3 項跳過；CI 1 worker／本機 2（無頭 WebGL 互搶）
 E2E_LIVE=1 TWIN_PORT=8010 npx playwright test i18n_live reset_live sync   # 3 項需 Live backend
 ```
 
 離線：viewport 5（1440×900／1280×720／1279×630／1366×768，不整頁捲動）、Reset 2、障礙繞行 1、
 感知列＋派工卡 1、介面語言 1（預設英文→切繁中：六個視圖標題／內容、右欄分頁、KPI 列、`<html lang>`、Analyze 結果隨語言重算、
-tablist 無障礙名稱、重新整理後記住；引擎產生的派工理由句維持英文）。Live：注入回饋訊息隨語言切換（接受／拒絕兩路徑、aria-label）、跨分頁控制同步＋回前景重抓、Live Reset 軌跡（重建期間舊 run 凍結：權威漂移 < 0.5 m、畫面 1 s 後靜止；
+tablist 無障礙名稱、重新整理後記住；引擎產生的派工理由句維持英文）。視圖互動 3（Energy 時間圖切換範圍時
+過期的 hover 索引不得崩潰；Robot Health 點一列 → 切回 3D 且鏡頭飛到該機器人，用 production build 驗——dev 的 StrictMode 會重跑 effect 而掩蓋；
+視圖層級 Error Boundary：單一視圖 render 崩潰只換成錯誤卡，Header／KPI 列照常，切視圖後重置）。Live：注入回饋訊息隨語言切換（接受／拒絕兩路徑、aria-label）、跨分頁控制同步＋回前景重抓、Live Reset 軌跡（重建期間舊 run 凍結：權威漂移 < 0.5 m、畫面 1 s 後靜止；
 切換後首幀即在新位置、定位前不移動、定位後無中間穿越、收斂 < 0.5／1.5 m）。
 
 軟體算圖環境（CI／無 GPU）用 `--use-angle=swiftshader`，只有個位數 FPS；e2e 只量位置與狀態，
@@ -52,4 +54,4 @@ tablist 無障礙名稱、重新整理後記住；引擎產生的派工理由句
 
 ## 測試掛勾（只在瀏覽器）
 
-`window.__twin`（store）、`window.__amrRender`（畫面上的 AMR 位置）、`window.__selectAmr(id)`。
+`window.__twin`（store）、`window.__amrRender`（畫面上的 AMR 位置）、`window.__camera`（相機位置）、`window.__selectAmr(id)`。

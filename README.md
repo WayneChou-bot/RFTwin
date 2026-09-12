@@ -59,8 +59,8 @@ parameter provenance). Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Tests & CI
 
-`npm run ci` regenerates schemas, fixture and types and runs **157 pytest** cases; Playwright covers **13 e2e** cases
-(viewport, Reset, detour, perception/dispatch, language switch, cross-tab sync, live Reset). The GitHub Actions workflow runs the same
+`npm run ci` regenerates schemas, fixture and types and runs **157 pytest** cases; Playwright covers **16 e2e** cases
+(viewport, Reset, detour, perception/dispatch, language switch, view interactions and error containment, cross-tab sync, live Reset). The GitHub Actions workflow runs the same
 pipeline plus a live-backend e2e stage (`.github/workflows/ci.yml`). See [`docs/TESTING.md`](docs/TESTING.md).
 
 ## Stack

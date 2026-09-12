@@ -31,6 +31,8 @@ function PowerChart({ hist, baseline, limit, alerts }: {
   const [hover, setHover] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const H = range === 0 ? hist : hist.slice(-range);
+  // hover 是「上一個範圍」的索引；切換範圍（60→15、Shift→60）後可能超出 H —— 不夾住會 H[hover] undefined 整頁崩潰
+  const hv = hover != null && hover < H.length ? hover : null;
   const W = 640, HT = 168, padL = 40, padB = 22, padT = 10;
   const vals = H.map((h) => h.energy_kw);
   if (vals.length < 2) return <div className="sub">{T("en.collecting")}</div>;
@@ -54,7 +56,7 @@ function PowerChart({ hist, baseline, limit, alerts }: {
       <div className="fsel" style={{ justifyContent: "flex-end" }}>
         {([[15, "en.15"], [60, "en.60"], [0, "en.shift"]] as const).map(([v, l]) => (
           <button key={v} className={range === v ? "on" : ""}
-            onClick={() => setRange(v)}>{T(l)}</button>))}
+            onClick={() => { setRange(v); setHover(null); }}>{T(l)}</button>))}
       </div>
       <svg viewBox={`0 0 ${W} ${HT}`} style={{ width: "100%" }}>
         {[0, hi / 2, hi].map((v, i) => (
@@ -90,13 +92,13 @@ function PowerChart({ hist, baseline, limit, alerts }: {
         {[0, Math.floor((H.length - 1) / 2), H.length - 1].map((i) => (
           <text key={i} x={xs(i)} y={HT - 8} textAnchor="middle" fontSize={8.5}
             fill="var(--muted)">{H[i].sim_minute}</text>))}
-        {hover != null && (
+        {hv != null && (
           <g>
-            <circle cx={xs(hover)} cy={ys(H[hover].energy_kw)} r={3}
+            <circle cx={xs(hv)} cy={ys(H[hv].energy_kw)} r={3}
               fill="var(--aqua)" stroke="var(--panel)" strokeWidth={1.5} />
-            <text x={xs(hover)} y={ys(H[hover].energy_kw) - 8} textAnchor="middle"
+            <text x={xs(hv)} y={ys(H[hv].energy_kw) - 8} textAnchor="middle"
               fontSize={9.5} fill="var(--ink)">
-              {H[hover].sim_minute} · {H[hover].energy_kw} kW</text>
+              {H[hv].sim_minute} · {H[hv].energy_kw} kW</text>
           </g>)}
       </svg>
       <div className="sub" style={{ fontSize: 10 }}>
