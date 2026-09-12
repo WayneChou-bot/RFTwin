@@ -127,7 +127,7 @@ async def outer_lifespan(server_app):
 def status() -> str:
     eng = backend.RUNS.get("LIVE-001")
     return json.dumps({
-        "service": "Robot Factory Digital Twin — simulation backend",
+        "service": "RFTwin · Robot Factory Digital Twin — simulation backend",
         "repo": f"https://github.com/{REPO}", "ref": REF,
         "run_id": eng.run_id if eng else None,
         "sim_time": eng.clock.sim_time_iso if eng else None,
@@ -139,7 +139,7 @@ def status() -> str:
 
 
 with gr.Blocks(title="RFTwin backend") as demo:
-    gr.Markdown("## Robot Factory Digital Twin — simulation backend\n"
+    gr.Markdown("## RFTwin · Robot Factory Digital Twin — simulation backend\n"
                 "This Space only runs the authoritative engine (REST + WebSocket). "
                 + (f"Open the 3D dashboard: **[{FRONTEND}]({FRONTEND})**" if FRONTEND else
                    "The 3D dashboard is deployed separately (Vercel)."))

@@ -1,10 +1,13 @@
-# Robot Factory Digital Twin
+# RFTwin · Robot Factory Digital Twin
 
 **A browser-native digital twin of a robotic production line — backend-authoritative, deterministic, explainable.**
 Four process cells, 12 robot arms and an AMR fleet run in a Python simulation engine; the 3D factory in the browser only
 renders. Same seed, same result — so every KPI, dispatch and detour can be traced to its cause.
 
-![Robot Factory Digital Twin — AMR perception fan, obstacle detour, dispatch record (headless software-rendered capture)](docs/media/hero.gif)
+A manufacturing-focused sibling to [WareTwin](https://github.com/WayneChou-bot/WareTwin), extending the same
+deterministic and explainable twin principles from warehouse operations to robotic production.
+
+![RFTwin — AMR perception fan, obstacle detour, dispatch record (headless software-rendered capture)](docs/media/hero.gif)
 
 [![CI](https://github.com/WayneChou-bot/RFTwin/actions/workflows/ci.yml/badge.svg)](https://github.com/WayneChou-bot/RFTwin/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/live%20demo-rf--twin.vercel.app-0ca30c)](https://rf-twin.vercel.app/)
@@ -90,7 +93,7 @@ MIT © 2026 Wayne Chou — see [LICENSE](LICENSE).
 <details>
 <summary>中文摘要</summary>
 
-一條四製程、12 台機械手臂、2 台 AMR 的機器人工廠數位分身。Python 引擎是唯一的事實來源，瀏覽器只呈現；同 seed
+RFTwin 是一條四製程、12 台機械手臂、2 台 AMR 的機器人工廠數位分身，是 WareTwin（倉儲）的製造業姊妹專案，延續同一套確定性、可解釋的分身原則。Python 引擎是唯一的事實來源，瀏覽器只呈現；同 seed
 同結果，所以每個 KPI、每次派工、每次改道都能追到原因。能做的事：故障傳播、隔離引擎 What-if（12 項指標＋第一分歧＋
 套用到 Live）、AMR 偵測／讓行／改道與感知視覺化、可解釋派工紀錄、能源帳、檢測真值 vs 判定、誠實的連線狀態
 （斷線後回放而不是假裝連線）。介面可切換英文／繁體中文（Header 的 中／EN，預設跟瀏覽器語言）。`npm run dev:all` 啟動；操作腳本見 `docs/DEMO.md`，架構與開發指南見

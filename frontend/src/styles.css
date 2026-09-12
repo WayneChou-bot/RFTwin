@@ -45,6 +45,7 @@
     box-shadow:0 6px 18px rgba(0,0,0,.5)}
   .moremenu .mi{padding:3px 0;font-size:12px}
   header .title{font-size:16px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+  header .title .sub{font-weight:600;color:var(--ink-2)}   /* 系列命名：RFTwin（品牌）· 全名（副標） */
   .live{display:inline-flex;align-items:center;gap:6px;color:var(--critical);
     border:1px solid var(--critical);border-radius:6px;padding:2px 8px;font-weight:700;
     font-size:12px;white-space:nowrap}
@@ -267,7 +268,8 @@
   @media (max-width:1439px),(max-height:899px){
     header{max-height:76px;padding:4px 10px;gap:1px}
     header .title{font-size:12.5px}
-    .hopt{display:none}                 /* 環境資訊 / line 名 / 行內 Rendering Mode → More menu */
+    header .title .sub{display:none}    /* Compact：只留 RFTwin，避免 header 擠壓 */
+    .hopt{display:none}                /* 環境資訊 / line 名 / 行內 Rendering Mode → More menu */
     .moremenu{display:block}
     .tab{padding:3px 6px;font-size:11px}
     .simctl button{padding:2px 5px;font-size:10px}
