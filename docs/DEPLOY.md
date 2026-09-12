@@ -32,19 +32,22 @@ Vercel 的 preview deployment 網域每次不同，要測 preview 就把該網�
 本機驗證跨站設定：`TWIN_CORS_ORIGINS=http://localhost:4174 uvicorn … --port 8051`，
 `VITE_API_BASE=http://localhost:8051 npm run build && npx vite preview --port 4174`。
 
-## Hugging Face Spaces 後端（免費、支援 WebSocket）
+## Hugging Face Spaces 後端（免費 CPU、支援 WebSocket）
 
-`deploy/huggingface/` 就是整個 Space repo（`README.md` 的 front matter 宣告 `sdk: docker`、`app_port: 8000`；
-`Dockerfile` 在建置時 clone 公開的 GitHub repo，只裝後端）。步驟：
+Docker SDK 的 Space 要付費，**Gradio SDK 免費**，它只是執行 `python app.py`——所以 `deploy/huggingface/` 就是整個
+Space repo：`app.py`（啟動時下載 GitHub 的 RFTwin tarball、匯入 FastAPI app、在 `/` 掛一頁 Gradio 狀態頁、
+以 uvicorn 在 7860 服務 `/api/*` 與 `/ws`）、`requirements.txt`（後端依賴）、`README.md`（front matter：`sdk: gradio`）。步驟：
 
-1. huggingface.co → New Space → SDK **Docker**（Blank）、CPU basic（免費）→ 建好後把 `deploy/huggingface/` 兩個檔案上傳
-   （Files → Upload，或 `git push` 到 Space repo）。GitHub repo 需為 Public（Dockerfile 用匿名 clone）。
-2. Space **Settings → Variables** 新增 `TWIN_CORS_ORIGINS`＝前端 Origin（`https://<app>.vercel.app`）。
-3. 建置完成後開 `https://<owner>-<space>.hf.space/api/health` 應回 200（首次 pre-roll 期間 503 屬正常）。
-4. Vercel 的 `VITE_API_BASE` 填 `https://<owner>-<space>.hf.space`（WebSocket 自動走 `wss://…/ws`）。
+1. huggingface.co → New Space：SDK **Gradio → Blank**、硬體 **ZeroGPU（Free）**（免費帳號只能選這個；我們的程式不用 GPU，
+   沒有 `@spaces.GPU` 的程式碼就照常在 CPU 上跑）、Public。ZeroGPU 只支援 Python 3.10／3.12，front matter 已設 `python_version: "3.12"`。
+   GitHub repo 需為 Public（匿名下載 tarball）。
+2. Files → 上傳 `deploy/huggingface/` 的三個檔到 Space 根目錄（覆蓋自動產生的 `README.md`／`app.py`）。
+3. Settings → Variables：`TWIN_CORS_ORIGINS`＝前端 Origin（`https://<app>.vercel.app`）；可選 `RFTWIN_FRONTEND_URL`（狀態頁上的連結）。
+4. 建置完成後 `https://<owner>-<space>.hf.space/api/health` 應回 200（首次 pre-roll 期間 503 屬正常）；`/` 是狀態頁。
+5. Vercel 的 `VITE_API_BASE` 填 `https://<owner>-<space>.hf.space`（WebSocket 自動走 `wss://…/ws`）。
 
-更新後端：Space 的 Dockerfile 改 `CACHE_BUST` 值（或 Settings → Factory rebuild）。免費 Space 48 小時無人用會休眠，
-喚醒約數十秒——期間 Vercel 頁面顯示 LOCAL DEMO，後端醒來後橫幅提示切 LIVE。
+更新後端：Settings → Restart Space（重新下載 main）。免費 Space 48 小時無人用會休眠，喚醒約數十秒——期間 Vercel 頁面顯示
+LOCAL DEMO，後端醒來後橫幅提示切 LIVE。
 
 ## 環境變數
 

@@ -1,0 +1,10 @@
+# Backend runtime deps for the Space (mirror of the repo's runtime section; gradio is provided by the SDK)
+fastapi~=0.141.1
+uvicorn[standard]~=0.46.0
+wsproto~=1.2.0
+pydantic~=2.13.3
+pyyaml~=6.0.3
+httpx~=0.28.1
+onnxruntime~=1.25.0
+numpy~=2.4.4
+pillow~=12.2.0
