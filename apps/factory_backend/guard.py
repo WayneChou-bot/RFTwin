@@ -109,8 +109,9 @@ def origin_allowed(origin: str | None, host: str | None = None,
       或 Origin 的 host 等於請求的 Host（同源）。其他一律拒（跨站 fetch 無法幫全部訪客按 Reset）。
     - Fetch Metadata：瀏覽器帶 `Sec-Fetch-Site: cross-site|same-site` 而 Origin 不在明示名單 → 拒
       （擋子網域）。`TWIN_ALLOW_NO_ORIGIN=1` 只影響「有名單」時是否放行無 Origin 的請求。"""
-    allowed = [o.strip().lower() for o in os.environ.get("TWIN_CORS_ORIGINS", "").split(",") if o.strip()]
-    if origin is not None and origin.strip().lower() in allowed:
+    # 名單容錯：去掉結尾斜線（部署平台的欄位常被填成 https://app.example/），比對一律用小寫 origin
+    allowed = [o.strip().lower().rstrip("/") for o in os.environ.get("TWIN_CORS_ORIGINS", "").split(",") if o.strip()]
+    if origin is not None and origin.strip().lower().rstrip("/") in allowed:
         return True
     if sec_fetch_site in ("cross-site", "same-site"):
         return False

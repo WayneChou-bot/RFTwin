@@ -40,10 +40,13 @@ Space repo：`app.py`（啟動時下載 GitHub 的 RFTwin tarball、匯入 FastA
 
 1. huggingface.co → New Space：SDK **Gradio → Blank**、硬體 **ZeroGPU（Free）**（免費帳號只能選這個；我們的程式不用 GPU，
    沒有 `@spaces.GPU` 的程式碼就照常在 CPU 上跑）、Public。ZeroGPU 只支援 Python 3.10／3.12，front matter 已設 `python_version: "3.12"`。
-   GitHub repo 需為 Public（匿名下載 tarball）。
+   GitHub repo 需為 Public（匿名下載 tarball；私有 repo 會 404）——或在 Space **Secrets** 加 `GITHUB_TOKEN`
+   （fine-grained token，只給 RFTwin 的 Contents: Read），`app.py` 會改走 GitHub API 下載。
 2. Files → 上傳 `deploy/huggingface/` 的三個檔到 Space 根目錄（覆蓋自動產生的 `README.md`／`app.py`）。
 3. Settings → Variables：`TWIN_CORS_ORIGINS`＝前端 Origin（`https://<app>.vercel.app`）；可選 `RFTWIN_FRONTEND_URL`（狀態頁上的連結）。
 4. 建置完成後 `https://<owner>-<space>.hf.space/api/health` 應回 200（首次 pre-roll 期間 503 屬正常）；`/` 是狀態頁。
+   網址規則：帳號與 Space 名稱轉小寫、以 `-` 相連（例：`ShihHua/rftwin-backend` → `https://shihhua-rftwin-backend.hf.space`）；
+   Space 頁面右上 ⋮ → Embed this Space 也會列出 Direct URL。
 5. Vercel 的 `VITE_API_BASE` 填 `https://<owner>-<space>.hf.space`（WebSocket 自動走 `wss://…/ws`）。
 
 更新後端：Settings → Restart Space（重新下載 main）。免費 Space 48 小時無人用會休眠，喚醒約數十秒——期間 Vercel 頁面顯示

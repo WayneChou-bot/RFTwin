@@ -4,11 +4,12 @@ emoji: 🏭
 colorFrom: blue
 colorTo: gray
 sdk: gradio
+sdk_version: 6.27.0
 python_version: "3.12"
 app_file: app.py
 pinned: false
 license: mit
-short_description: Simulation backend (FastAPI + WebSocket) for Robot Factory Digital Twin
+short_description: Simulation backend (FastAPI + WebSocket) for RFTwin
 ---
 
 # Robot Factory Digital Twin — backend

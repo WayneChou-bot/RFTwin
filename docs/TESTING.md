@@ -10,7 +10,7 @@ npm run ci      # schemas → engine fixture → AJV → types diff → pytest
 Live Playwright（另起 uvicorn :8010）。任何 schema／types／layout 副本漂移都會讓 CI 失敗（ADR-003）。
 repo 建立後在 README 加真實徽章：`[![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)`。
 
-## pytest（156 項）
+## pytest（157 項）
 
 ```bash
 pip install -r requirements.txt
@@ -32,7 +32,7 @@ PYTHONPATH=packages python -m pytest tests/ -q     # 約 4–5 分鐘（tests/co
 | test_sidezone／test_facility | 5／9 | 收出貨閉環、廠務設備 |
 | test_traffic | 15 | 2h 最小間距、讓行／改道／續行、路線連續性、障礙驗證、無安全路徑（封死所有車道 422／NO_SAFE_PATH 單一事件與恢復） |
 | test_layout | 3 | 佈局 JSON 單一來源（引擎＝前端副本） |
-| test_guard | 11 | rate limit、Origin（名單／預設同源／Sec-Fetch-Site／X-Forwarded-Host）、body 上限、XFF 取段、WebSocket（accept 前 Origin、連線上限、訊息大小、慢連線逾時→關閉並釋放名額、並行 fan-out、首份 snapshot 逾時不卡廣播） |
+| test_guard | 12 | rate limit、Origin（名單／預設同源／Sec-Fetch-Site／X-Forwarded-Host）、body 上限、XFF 取段、WebSocket（accept 前 Origin、連線上限、訊息大小、慢連線逾時→關閉並釋放名額、並行 fan-out、首份 snapshot 逾時不卡廣播、名單結尾斜線容錯） |
 | test_dispatch_perception | 6 | Decision Record 涵蓋、rank 1 指派、決定性、感知幾何、wire |
 
 ## Playwright e2e（13 項）

@@ -270,3 +270,11 @@ def test_first_snapshot_send_cannot_freeze_broadcasts(monkeypatch):
     assert t_broadcast < 0.5, t_broadcast    # 廣播沒有被首份 snapshot 卡住 2 s
     assert fast.sent == ["ctl"] and fast in main._clients
     main._clients.clear(); main._WS_KEY.clear()
+
+
+def test_allowlist_tolerates_trailing_slash(monkeypatch):
+    """部署欄位常被填成 https://app.example/（結尾斜線）：名單比對應去斜線後精確相符，其他 Origin 仍拒。"""
+    from apps.factory_backend.guard import origin_allowed
+    monkeypatch.setenv("TWIN_CORS_ORIGINS", "https://rf-twin.vercel.app/")
+    assert origin_allowed("https://rf-twin.vercel.app", host="x.hf.space", sec_fetch_site="cross-site")
+    assert not origin_allowed("https://evil.example", host="x.hf.space", sec_fetch_site="cross-site")
