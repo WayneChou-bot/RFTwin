@@ -18,7 +18,7 @@ test("energy chart range switch survives a stale hover index (60→15, shift→6
   await openDemo(page);
   await page.getByRole("tab", { name: "Energy" }).click();
   const chart = page.locator(".echart");
-  await expect(chart).toBeVisible();
+  await expect(chart).toBeVisible({ timeout: 20_000 });
   // 滑到圖的右緣 → hover = 最後一個索引（59）；再點 15 min
   const box = (await chart.boundingBox())!;
   await page.mouse.move(box.x + box.width - 20, box.y + box.height / 2);
@@ -40,7 +40,8 @@ test("clicking a Robot Health row returns to 3D and flies the camera to that rob
   await page.waitForTimeout(1500);                                           // Overview 就位
   const before = await page.evaluate(() => (window as any).__camera as number[]);
   await page.getByRole("tab", { name: "Robot Health" }).click();
-  await expect(page.locator("table.vtable tbody tr").first()).toBeVisible();
+  // Local Demo 進場時 panels.json 可能還在背景載入（CI 慢）：getJson 會等 fixture 到齊，這裡給足時間
+  await expect(page.locator("table.vtable tbody tr").first()).toBeVisible({ timeout: 20_000 });
   await page.locator("table.vtable tbody tr", { hasText: "R-01" }).first().click();
   await expect(page.getByRole("tab", { name: "3D Factory" })).toHaveAttribute("aria-selected", "true");
   expect(await page.evaluate(() => (window as any).__twin.getState().selectedRobot)).toBe("R-01");
@@ -54,7 +55,7 @@ test("clicking a Robot Health row returns to 3D and flies the camera to that rob
 test("a crashing view is contained by the view-level error boundary", async ({ page }) => {
   await openDemo(page);
   await page.getByRole("tab", { name: "Energy" }).click();
-  await expect(page.locator(".echart")).toBeVisible();
+  await expect(page.locator(".echart")).toBeVisible({ timeout: 20_000 });
   // 讓「只有 Energy 視圖」的下一次 render 炸掉：x 軸刻度把 sim_minute 當文字渲染，換成物件 → React 丟
   // "Objects are not valid as a React child"（底部 KPI 列的 sparkline 只讀 good_units／defect_rate／energy_kw，不受影響）
   await page.evaluate(() => {
