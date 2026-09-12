@@ -8,7 +8,6 @@ npm run ci      # schemas → engine fixture → AJV → types diff → pytest
 
 `.github/workflows/ci.yml` 跑同一條管線，再加前端 build、離線 Playwright（Local Demo）與
 Live Playwright（另起 uvicorn :8010）。任何 schema／types／layout 副本漂移都會讓 CI 失敗（ADR-003）。
-repo 建立後在 README 加真實徽章：`[![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)`。
 
 ## pytest（157 項）
 

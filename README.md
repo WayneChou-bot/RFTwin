@@ -6,6 +6,8 @@ renders. Same seed, same result — so every KPI, dispatch and detour can be tra
 
 ![Robot Factory Digital Twin — AMR perception fan, obstacle detour, dispatch record (headless software-rendered capture)](docs/media/hero.gif)
 
+[![CI](https://github.com/WayneChou-bot/RFTwin/actions/workflows/ci.yml/badge.svg)](https://github.com/WayneChou-bot/RFTwin/actions/workflows/ci.yml)
+[![Live demo](https://img.shields.io/badge/live%20demo-rf--twin.vercel.app-0ca30c)](https://rf-twin.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![engine](https://img.shields.io/badge/engine-0.20.0-3987e5) ![schema](https://img.shields.io/badge/wire%20schema-1.0-3987e5)
 ![python](https://img.shields.io/badge/Python-3.11%2B-3776ab) ![ts](https://img.shields.io/badge/TypeScript-React%20%2B%20R3F-3178c6) ![fastapi](https://img.shields.io/badge/FastAPI-WebSocket-009688)
@@ -23,6 +25,10 @@ renders. Same seed, same result — so every KPI, dispatch and detour can be tra
 | **Inspection ground truth vs verdict** — synthetic parts, ONNX model, escapes and false rejects tracked | Select R-11/R-12: camera feed, verdict vs truth |
 | **Honest connectivity** — LIVE → RECONNECTING → STALE → LOCAL DEMO | Kill the backend: STALE after 15 s, then a 5-minute deterministic replay (not a second engine) |
 | **Bilingual UI** — English / 繁體中文 | Header toggle (中 / EN); defaults to the browser language and is remembered. Engine output (events, dispatch reasons) stays English by design |
+
+**Try it:** [rf-twin.vercel.app](https://rf-twin.vercel.app/) — the header badge reads **LIVE** once the backend
+(a free Hugging Face Space) is awake; if it has gone to sleep the page shows **LOCAL DEMO** (deterministic replay)
+and offers to switch to Live when the engine is back, typically within a minute.
 
 ## Quick start
 
