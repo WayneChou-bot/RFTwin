@@ -69,7 +69,7 @@ jobs:
         run: |
           (cd .. && PYTHONPATH=packages TWIN_RATE_LIMIT=0 python -m uvicorn apps.factory_backend.main:app --port 8010 --ws wsproto &) 
           for i in $(seq 1 60); do curl -sf http://localhost:8010/api/health >/dev/null && break; sleep 1; done
-          npx playwright test i18n reset_live sync
+          npx playwright test i18n_live reset_live sync
 
       - name: Upload Playwright report on failure
         if: failure()

@@ -1,6 +1,7 @@
 /** UI 面板（§27）— 全部數字來自 Twin snapshot，前端不得自行推導生產結果。 */
 import { useEffect, useRef, useState } from "react";
 import { getJson, postJson } from "./api";
+import { apiUrl } from "../config";
 import { dismissLivePrompt, goLive, simCommand, simSpeed, switchToDemo, useTwin,
          type ConnMode, type RenderMode } from "../state/store";
 import { demoLoaded } from "../state/demo";
@@ -13,7 +14,7 @@ async function inject(failure_type: string, target_id: string, duration_sec?: nu
                       extra?: Record<string, number>): Promise<string | null> {
   if (useTwin.getState().mode === "LOCAL_DEMO") return t("live.required");
   try {
-    const r = await fetch("/api/failures/inject", { method: "POST",
+    const r = await fetch(apiUrl("/api/failures/inject"), { method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ failure_type, target_id, duration_sec, ...(extra ?? {}) }) });
     if (r.ok) return null;
@@ -587,7 +588,7 @@ function CameraFeed({ active }: { active: boolean }) {
   return (
     <div className="camfeed">
       <div className="camimg">
-        <img src={latest.image_url ?? `/api/inspection/${latest.part_id}/image.png`}
+        <img src={latest.image_url ?? apiUrl(`/api/inspection/${latest.part_id}/image.png`)}
           alt={latest.part_id} />
         {latest.bbox && (
           <div className="bbox" style={{
@@ -611,7 +612,7 @@ function CameraFeed({ active }: { active: boolean }) {
         <div className="thumbs">
           {feed.slice(1).map((f) => (
             <img key={f.part_id}
-              src={f.image_url ?? `/api/inspection/${f.part_id}/image.png`}
+              src={f.image_url ?? apiUrl(`/api/inspection/${f.part_id}/image.png`)}
               title={`${f.part_id} ${f.predicted}`}
               style={{ outline: f.verdict === "FAIL" ? "1px solid var(--critical)" : "none" }} />))}
         </div>

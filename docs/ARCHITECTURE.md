@@ -38,7 +38,7 @@ frontend（Vite + React + R3F）── 3D 工廠、面板、Local Demo 回放（
 | 參數載入 + hash | `packages/domain_factory/params.py` | ADR-009 `parameter_hash` |
 | 模擬參數 | `config/simulation_parameters.yaml` | 唯一參數來源（factory-mvp-v13） |
 | 場地佈局 | `config/factory_layout.json` | 唯一幾何來源（factory-layout-v1）；`scripts/sync_layout.py` 同步到前端 |
-| 部署 | `Dockerfile`、`render.yaml`、`docs/DEPLOY.md` | 單容器（backend 服務 dist）；防護層 `apps/factory_backend/guard.py` |
+| 部署 | `Dockerfile`、`render.yaml`、`docs/DEPLOY.md` | 單容器（backend 服務 dist）或 Vercel 前端＋Render 後端（`frontend/src/config.ts`：`VITE_API_BASE`）；防護層 `apps/factory_backend/guard.py` |
 | JSON Schema | `schemas/*.schema.json` | 由 models 產生，勿手改 |
 | TS types | `frontend/src/types/generated.ts` | 由 Schema 產生，勿手改 |
 | Canonical fixture | `fixtures/snapshot.live-001.json` | **由 Engine pre-roll 輸出**（`scripts/dump_snapshot.py`）|

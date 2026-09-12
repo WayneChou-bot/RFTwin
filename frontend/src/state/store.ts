@@ -3,6 +3,7 @@
  *  §43 模式機：CONNECTING → LIVE｜LOCAL_DEMO；LIVE 斷線 → RECONNECTING → STALE；
  *  LOCAL_DEMO = Python 引擎預產 fixture 的確定性 Replay（不是第二套引擎）。 */
 import { create } from "zustand";
+import { apiUrl, wsUrl } from "../config";
 import type { EventMessage, SnapshotMessage, TwinEvent } from "../types";
 import { demoLoaded, loadDemo, resetDemo, startDemo, stopDemo } from "./demo";
 
@@ -201,7 +202,7 @@ async function healthLoop(gen: number, attempt: number): Promise<void> {
   const st = useTwin.getState();
   if (st.mode === "LIVE" || st.mode === "RECONNECTING") return;  // WS 自己會重連
   try {
-    const r = await fetch("/api/health");
+    const r = await fetch(apiUrl("/api/health"));
     if (r.ok) {
       const h = await r.json();
       if (gen !== generation) return;
@@ -241,7 +242,7 @@ export async function goLive(genArg?: number): Promise<void> {
   const gen = genArg ?? generation;
   if (gen !== generation) return;
   try {
-    const r = await fetch("/api/runs/LIVE-001/snapshot");
+    const r = await fetch(apiUrl("/api/runs/LIVE-001/snapshot"));
     if (!r.ok) throw new Error(`snapshot ${r.status}`);
     const snap = await r.json();
     if (gen !== generation) return;
@@ -276,8 +277,7 @@ export function dismissLivePrompt(): void {
 
 function openWs(gen: number): void {
   if (gen !== generation) return;
-  const url = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`;
-  const sock = new WebSocket(url);
+  const sock = new WebSocket(wsUrl());
   ws = sock;
   sock.onopen = () => {
     if (gen !== generation) { sock.close(); return; }
@@ -332,7 +332,7 @@ export async function resyncSnapshot(reason = "visibility"): Promise<boolean> {
   const st = useTwin.getState();
   if (st.mode !== "LIVE" || st.resetting) return false;
   try {
-    const r = await fetch("/api/runs/LIVE-001/snapshot");
+    const r = await fetch(apiUrl("/api/runs/LIVE-001/snapshot"));
     if (!r.ok) return false;
     const m = await r.json();
     const cur = useTwin.getState();
@@ -356,14 +356,14 @@ async function recoverGap(): Promise<void> {
   if (st.gapRecovering || !st.runId) return;
   useTwin.setState({ gapRecovering: true });
   try {
-    const r = await fetch(`/api/runs/${st.runId}/events?after_seq=${st.lastSeq}`);
+    const r = await fetch(apiUrl(`/api/runs/${st.runId}/events?after_seq=${st.lastSeq}`));
     if (r.status === 410 || r.status === 404) {                 // §52：舊 run 已被 Reset 取代 → 換到現役 run
       await resyncSnapshot("run-superseded");
       return;
     }
     const d = await r.json();
     if (!d.complete) {                                          // 超出保留窗口 → 重取 snapshot
-      const snap = await (await fetch(`/api/runs/${st.runId}/snapshot`)).json();
+      const snap = await (await fetch(apiUrl(`/api/runs/${st.runId}/snapshot`))).json();
       useTwin.getState().applySnapshot(snap);
     } else {
       for (const ev of d.events) {
@@ -400,14 +400,14 @@ export async function simCommand(cmd: "start" | "pause" | "reset"): Promise<void
     // 「已取代」，任何晚到的舊 run snapshot／event 一律丟棄（無閃回、無二次跳位）
     useTwin.setState({ resetting: true, paused: true });
     try {
-      const r = await fetch("/api/simulation/reset", { method: "POST" });
+      const r = await fetch(apiUrl("/api/simulation/reset"), { method: "POST" });
       const d = await r.json();
       const newRun: string = d.run_id ?? "LIVE-001";
       const cur = useTwin.getState();
       if (cur.runId && cur.runId !== newRun) {
         useTwin.setState({ superseded: new Set(cur.superseded).add(cur.runId) });
       }
-      const snap = await (await fetch(`/api/runs/${newRun}/snapshot`)).json();
+      const snap = await (await fetch(apiUrl(`/api/runs/${newRun}/snapshot`))).json();
       useTwin.getState().applySnapshot(snap);
       useTwin.getState().setSim(false, useTwin.getState().speed);
     } catch {
@@ -418,7 +418,7 @@ export async function simCommand(cmd: "start" | "pause" | "reset"): Promise<void
     return;
   }
   try {
-    await fetch(`/api/simulation/${cmd}`, { method: "POST" });
+    await fetch(apiUrl(`/api/simulation/${cmd}`), { method: "POST" });
     st.setSim(cmd === "pause", st.speed);
   } catch { /* offline：按鈕無效但不噴錯 */ }
 }
@@ -431,7 +431,7 @@ export async function simSpeed(value: number): Promise<void> {
     return;
   }
   try {
-    await fetch(`/api/simulation/speed?value=${value}`, { method: "POST" });
+    await fetch(apiUrl(`/api/simulation/speed?value=${value}`), { method: "POST" });
     st.setSim(st.paused, value);
   } catch { /* offline */ }
 }

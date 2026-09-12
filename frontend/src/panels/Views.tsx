@@ -1,6 +1,7 @@
 /** 中央區六個操作視角（§7）— 3D 之外的五個資料視圖，全部由權威資料推導。 */
 import { useEffect, useState } from "react";
 import { getJson } from "./api";
+import { apiUrl } from "../config";
 import { useTwin } from "../state/store";
 import { Bar, pct } from "./widgets";
 import { tOpt, useLang, useT } from "../i18n";
@@ -92,7 +93,7 @@ export function QualityView() {
           <div key={f.part_id} className="qcard"
             style={{ borderColor: f.verdict === "FAIL" ? "var(--critical)" : "var(--line)" }}>
             <div className="qimg">
-              <img src={f.image_url ?? `/api/inspection/${f.part_id}/image.png`}
+              <img src={f.image_url ?? apiUrl(`/api/inspection/${f.part_id}/image.png`)}
                 alt={f.part_id} />
               {f.bbox && <div className="bbox" style={{
                 left: `${f.bbox[0] * 100}%`, top: `${f.bbox[1] * 100}%`,

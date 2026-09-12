@@ -7,7 +7,7 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: TWIN_CORS_ORIGINS        # 留空＝只接受同源（§53）；前端另掛網域才填 https://…
+      - key: TWIN_CORS_ORIGINS        # 留空＝只接受同源（§53）；前端放 Vercel 時填 https://<app>.vercel.app（見 docs/DEPLOY.md）
         value: ""
       - key: TWIN_RATE_LIMIT
         value: "1"

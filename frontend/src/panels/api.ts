@@ -4,6 +4,7 @@
  *  需要權威引擎的端點（scenarios/copilot/inject）回 null → UI 顯示停用提示。
  *  （完整 typed client／AbortController／retry 對本作品規模屬過度工程，見 README。） */
 import { useTwin } from "../state/store";
+import { apiUrl } from "../config";
 
 let demoAux: any = null;
 
@@ -33,7 +34,7 @@ export async function getJson<T = any>(url: string): Promise<T | null> {
     return d !== undefined ? (JSON.parse(JSON.stringify(d)) as T) : null;
   }
   try {
-    const r = await fetch(url);
+    const r = await fetch(apiUrl(url));
     if (!r.ok) return null;
     return await r.json();
   } catch {
@@ -44,7 +45,7 @@ export async function getJson<T = any>(url: string): Promise<T | null> {
 export async function postJson<T = any>(url: string, body?: unknown): Promise<T | null> {
   if (useTwin.getState().mode === "LOCAL_DEMO") return null;   // §43.4 需權威引擎
   try {
-    const r = await fetch(url, {
+    const r = await fetch(apiUrl(url), {
       method: "POST",
       headers: body !== undefined ? { "Content-Type": "application/json" } : undefined,
       body: body !== undefined ? JSON.stringify(body) : undefined,

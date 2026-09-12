@@ -40,7 +40,7 @@ PYTHONPATH=packages python -m pytest tests/ -q     # 約 4–5 分鐘（tests/co
 ```bash
 cd frontend && npm ci && npx playwright install chromium
 npm run build && npm run test:e2e                       # 10 項離線（Local Demo），3 項跳過；CI 1 worker／本機 2（無頭 WebGL 互搶）
-E2E_LIVE=1 TWIN_PORT=8010 npx playwright test i18n reset_live sync   # 3 項需 Live backend
+E2E_LIVE=1 TWIN_PORT=8010 npx playwright test i18n_live reset_live sync   # 3 項需 Live backend
 ```
 
 離線：viewport 5（1440×900／1280×720／1279×630／1366×768，不整頁捲動）、Reset 2、障礙繞行 1、
