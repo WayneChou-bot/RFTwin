@@ -19,6 +19,7 @@ COPY apps ./apps
 COPY packages ./packages
 COPY config ./config
 COPY schemas ./schemas
+COPY assets ./assets
 COPY --from=web /src/frontend/dist ./frontend/dist
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
